@@ -18,6 +18,6 @@ plot.ggmtest <- function(x, bins = 30, hist_col = "black", hist_fill = "gray", b
 }
 
 # tst
-plot(tst) +
-  theme_bw()
+# plot(tst) +
+#   theme_bw()
 

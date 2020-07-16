@@ -1,3 +1,12 @@
+
+
+# ----- TO DO --------
+# + Output in a dataframe
+# + Add summary stats for lhs & rhs
+# + Allow option to simply take data.frame
+# + Expand object type, GGMnonreg, rstanarm, etc.
+# + Clear comments on everything
+
 ggmtest <- function(hypothesis,
                     obj,
                     cred = 0.90,
@@ -7,30 +16,38 @@ ggmtest <- function(hypothesis,
 
   stopifnot(length(hypothesis) == 1L & is.character(hypothesis))
 
+  # Extract variable names
   all_vars <- dimnames(obj$Y)[[2]]
+
+  # Create p by p matrix of name combinations
   all_cors <- sapply(all_vars,
                      function(x) paste(all_vars, x, sep = "--"))
 
+  # remove whitespace
+  h <- gsub("[\\s\t\r\n]", "", hypothesis)
 
-  h <- gsub("[ \t\r\n]", "", hypothesis)
+  # extract sign
   sign <- get_matches("=|<|>", h)
 
-  stopifnot(length(sign) == 1L & sign %in% c(">", "<", "="))
+  stopifnot(length(sign) == 1L & sign %in% c("=", "<", ">"))
 
   # left and right hand sides
   lr <- get_matches("[^=<>]+", h)
 
+  # write wrap lhs and rhs with parentheses
   h <- paste0("(", lr[1], ")")
 
   h <- paste0(h,
               ifelse(lr[2] != "0",
                      yes = paste0("-(", lr[2], ")"),
                      no = ""))
-  vars <- find_vars(h)
-  vars_cors <- get_matches("[[:alnum:]]+--[[:alnum:]]+", h)
-  # vars_cors <- regmatches(h,
-  #                         gregexpr("[[:alnum:]]+--[[:alnum:]]+", h))
-  vars_cors <- unlist(vars_cors)
+
+  # extract variables in hyp
+  # vars <- find_vars(h)
+
+  # extract all correlations in hyp
+  vars_cors_list <- get_matches("[[:alnum:]]+--[[:alnum:]]+", h)
+  vars_cors <- unlist(vars_cors_list)
 
   # add backticks for evaluation of hypotheses
   h_eval <- h
@@ -40,7 +57,7 @@ ggmtest <- function(hypothesis,
               x = h_eval)
   }
 
-  # all parameters in hypothesis are valid
+  # check all parameters in hypothesis are valid
   miss_pars <- setdiff(vars_cors, all_cors)
   if (length(miss_pars)) {
       miss_pars <- paste(miss_pars, collapse = ",")
@@ -48,13 +65,16 @@ ggmtest <- function(hypothesis,
     }
 
 
-  # store posterior samples in a matrix
+  # columns
   p <- obj$p
 
+  # upper triangle indices
   upper_tri <- upper.tri(matrix(0, p, p))
 
+  # number of iterations in original object
   iter <- obj$iter
 
+  # place posterior samples in matrix
   post <- matrix(
     data = obj$post_samp$fisher_z[,,51:(iter + 50)][upper_tri],
     nrow = iter,
@@ -95,7 +115,6 @@ ggmtest <- function(hypothesis,
   # compute credible invervals
   cri_z <- quantile(post_transform_z, cri_bound)
   cri <- quantile(post_transform, cri_bound)
-  # q_prior <- quantile(prior_transform, cri_bound)
 
   # summary statistics
   post_mean <- mean(post_transform)
@@ -106,13 +125,13 @@ ggmtest <- function(hypothesis,
 
   if (sign != "=") {
     support <- ifelse(excludes_rope,
-                      paste0("Hypothesis is supported"),
-                      paste0("Hypothesis is not supported"))
+                      paste0("Test is supported"),
+                      paste0("Test is not supported"))
   }
   else {
     support <- ifelse(excludes_rope,
-                      paste0("Hypothesis is not supported"),
-                      paste0("Hypothesis is supported"))
+                      paste0("Test is not supported"),
+                      paste0("Test is supported"))
   }
 
   out <- list(hypothesis = hypothesis,
@@ -121,6 +140,8 @@ ggmtest <- function(hypothesis,
               post_z = post_transform_z,
               CrI = cri,
               CrI_z = cri_z,
+              post_mean = post_mean,
+              post_sd = post_sd,
               support = as.character(support),
               cred = cred,
               call = match.call())
@@ -133,17 +154,21 @@ print.ggmtest <- function(x, ...) {
   if (is(x, "ggmtest")) {
     cat("ggmtest: Testing Hypotheses in GGMs with Credible Intervals \n\n")
     cat("Call:", deparse(x$call), "\n")
+
     cat("------ \n")
+
     cat("Hypothesis:", x$hypothesis, "\n")
 
     cat("------ \n")
 
-
     cri <- round(x$CrI, 2)
+
     cat(paste0(x$cred*100, "%"), "CrI of the difference: [", cri[[1]], ",", cri[[2]], "] \n")
-
-
     cat("ROPE: [", x$rope[[1]], ",", x$rope[[2]], "] \n")
+
+
+    cat("Posterior Mean:", round(x$post_mean, 2), "\n")
+    cat("Posterior SD:", round(x$post_sd, 2), "\n")
 
     cat("------ \n")
 
@@ -151,10 +176,11 @@ print.ggmtest <- function(x, ...) {
   }
 }
 
-# tst <- ggmtest("2*a--b > a--b",
-#                obj = est,
-#                cred = 0.95,
-#                rope = c(-0.1, 0.1))
-#
-# tst
 
+# df(
+#   rowname = c("lhs", "rhs", "diff"),
+#   posterior_mean = c("ml", "mr", "mdiff"),
+#   posterior_sd = c("sdl", "sdr", "sddiff"),
+#   lb = c("", "", lbdiff),
+#   ub = c("", "", ubdiff)
+# )

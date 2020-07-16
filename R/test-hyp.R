@@ -26,6 +26,6 @@ tst <- ggmtest("2*a--b > a--b",
                   rope = c(-0.1, 0.1))
 str(tst)
 tst
-
-plot(tst) +
-  theme_classic()
+#
+# plot(tst) +
+#   theme_classic()
