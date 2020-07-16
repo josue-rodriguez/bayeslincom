@@ -9,7 +9,7 @@ Y <- MASS::mvrnorm(n = 500,
 
 colnames(Y) <- letters[1:16]
 
-est <- estimate(
+est <- explore(
   Y,
   prior_sd = 0.5,
   type = "continuous",
@@ -20,12 +20,20 @@ est <- estimate(
 
 hyps <- sapply(c("a", "b"), function(x) make_ei_hyp(x, Y))
 hyp <- paste(hyps, collapse = ">")
-tst <- ggmtest("2*a--b > a--b",
+tst <- hypothesis("2*a--b > a--b",
                   obj = est,
                   cred = 0.90,
-                  rope = c(-0.1, 0.1))
+                  rope = NULL)
 str(tst)
 tst
-#
-# plot(tst) +
-#   theme_classic()
+
+
+library(GGMnonreg)
+x <- GGMnonreg::GGM_bootstrap(Y)
+
+tst <- hypothesis("2*a--b > 0",
+           obj = x,
+           cred = 0.90,
+           rope = c(-0.1, 0.1))
+str(tst)
+tst
