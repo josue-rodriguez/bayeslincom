@@ -483,12 +483,12 @@ hypothesis.bbcor <- function(hypothesis,
   int <- quantile(boot_eval, int_bound)
 
   # summary statistics
-  mean_samples <- mean(boot_comb)
-  sd_samples <- sd(boot_comb)
+  mean_samples <- mean(boot_eval)
+  sd_samples <- sd(boot_eval)
 
   if (!is.null(rope)) {
     # decision rule
-    excludes_rope <- excludes_rope(cri, rope, sign)
+    excludes_rope <- excludes_rope(int, rope, sign)
 
     if (sign != "=") {
       support <- ifelse(excludes_rope,
@@ -508,12 +508,12 @@ hypothesis.bbcor <- function(hypothesis,
 
   out <- list(hypothesis = hypothesis,
               rope = rope,
-              boot_comb = boot_comb,
-              CrI = cri,
+              samples_= boot_eval,
+              interval_rannge = int,
               mean_samples = mean_samples,
               sd_samples = sd_samples,
               support = as.character(support),
-              cred = cred,
+              interval = interval,
               call = match.call())
 
 
