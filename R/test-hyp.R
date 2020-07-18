@@ -36,7 +36,7 @@ tst <- hypothesis("2*a--b > 0",
            interval = 0.90,
            rope = c(-0.1, 0.1))
 str(tst)
-tset
+tst
 
 #===========
 library(BBcor)
@@ -48,8 +48,14 @@ class(bb_sample)
 
 
 # correlation matrix
+str(bb_sample)
 dimnames(bb_sample$samps)[[2]] <- letters[1:5]
-str(bb_sample$samps)
+
+tst_bb <- hypothesis.bbcor("mpg--drat > mpg--drat",
+                      obj = bb_sample,
+                      interval = 0.90,
+                      rope = c(-0.1, 0.1))
+str(tst_bb)
 
 #===========
 X <- matrix(rnorm(10 * 5000), nrow = 5000, ncol = 10)
