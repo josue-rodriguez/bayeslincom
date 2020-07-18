@@ -1,8 +1,9 @@
-plot.ggmtest <- function(x, bins = 30, hist_col = "black", hist_fill = "gray", bar_col = "tomato") {
+plot.hypothesis <- function(x, bins = 30, hist_col = "black", hist_fill = "gray", bar_col = "tomato") {
 
   plot_data <- data.frame(samples = x$post)
 
-  ggplot(plot_data) +
+  p <-
+    ggplot(plot_data) +
     geom_histogram(aes(samples),
                    col = hist_col,
                    fill = hist_fill,
@@ -12,12 +13,15 @@ plot.ggmtest <- function(x, bins = 30, hist_col = "black", hist_fill = "gray", b
                  y = 0,
                  yend = 0,
                  col = bar_col,
-                 size = 4) +
-    geom_vline(xintercept = x$rope,
-               linetype = "dashed")
+                 size = 4)
+
+    if (!is.null(x$rope)) {
+      p <- p + geom_vline(xintercept = x$rope, linetype = "dashed")
+    }
+  return(p)
 }
 
-# tst
-# plot(tst) +
-#   theme_bw()
+
+plot(tst) +
+  theme_bw()
 

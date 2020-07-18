@@ -22,7 +22,7 @@ hyps <- sapply(c("a", "b"), function(x) make_ei_hyp(x, Y))
 hyp <- paste(hyps, collapse = ">")
 tst <- hypothesis("2*a--b > a--b",
                   obj = est,
-                  cred = 0.90,
+                  interval = 0.90,
                   rope = NULL)
 str(tst)
 tst
@@ -33,7 +33,32 @@ x <- GGMnonreg::GGM_bootstrap(Y)
 
 tst <- hypothesis("2*a--b > 0",
            obj = x,
-           cred = 0.90,
+           interval = 0.90,
            rope = c(-0.1, 0.1))
 str(tst)
-tst
+tset
+
+#===========
+library(BBcor)
+Y <- mtcars[,1:5]
+
+# sample posterior
+bb_sample <- bbcor(Y, method = "spearman")
+class(bb_sample)
+
+
+# correlation matrix
+dimnames(bb_sample$samps)[[2]] <- letters[1:5]
+str(bb_sample$samps)
+
+#===========
+X <- matrix(rnorm(10 * 5000), nrow = 5000, ncol = 10)
+df <- as.data.frame(X)
+head(df)
+dimnames(df)[[2]]
+
+tst_df <- hypothesis.default("2*V1 > V2",
+                              obj = df,
+                              interval = 0.90,
+                              rope = NULL)
+str(tst_df)
