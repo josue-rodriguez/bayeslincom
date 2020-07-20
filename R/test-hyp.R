@@ -2,6 +2,8 @@
 library(BGGM)
 library(dplyr)
 library(ggplot2)
+library(GGMnonreg)
+library(BBcor)
 
 Y <- MASS::mvrnorm(n = 500,
                    mu = rep(0, 16),
@@ -9,7 +11,7 @@ Y <- MASS::mvrnorm(n = 500,
 
 colnames(Y) <- letters[1:16]
 
-est <- explore(
+est <- estimate(
   Y,
   prior_sd = 0.5,
   type = "continuous",
@@ -20,51 +22,63 @@ est <- explore(
 
 hyps <- sapply(c("a", "b"), function(x) make_ei_hyp(x, Y))
 hyp <- paste(hyps, collapse = ">")
-tst <- hypothesis("2*a--b > a--b",
+tst_bggm <- hypothesis("a--b > 0",
                   obj = est,
-                  interval = 0.90,
-                  rope = NULL)
-str(tst)
-tst
+                  ci_level = 0.90,
+                  # rope = NULL,
+                  rope = c(-0.1, 0.1)
+                  )
+str(tst_bggm)
+tst_bggm
 
-
-library(GGMnonreg)
+#================
 x <- GGMnonreg::GGM_bootstrap(Y)
 
-tst <- hypothesis("2*a--b > 0",
+tst_nr <- hypothesis("2*a--b > 0",
            obj = x,
-           interval = 0.90,
-           rope = c(-0.1, 0.1))
-str(tst)
-tst
+           ci_level = 0.90,
+           rope = NULL
+           # rope = c(-0.1, 0.1)
+           )
+str(tst_nr)
+tst_nr
 
 #===========
-library(BBcor)
-Y <- mtcars[,1:5]
+
 
 # sample posterior
 bb_sample <- bbcor(Y, method = "spearman")
-class(bb_sample)
 
-
-# correlation matrix
-str(bb_sample)
-dimnames(bb_sample$samps)[[2]] <- letters[1:5]
-
-tst_bb <- hypothesis.bbcor("mpg--drat > mpg--drat",
+tst_bb <- hypothesis("2*a--b > 0",
                       obj = bb_sample,
-                      interval = 0.90,
-                      rope = c(-0.1, 0.1))
+                      ci_level = 0.90,
+                     # rope = NULL,
+                     rope = c(-0.1, 0.1)
+                     )
 str(tst_bb)
-
+tst_bb
 #===========
-X <- matrix(rnorm(10 * 5000), nrow = 5000, ncol = 10)
-df <- as.data.frame(X)
-head(df)
-dimnames(df)[[2]]
 
-tst_df <- hypothesis.default("2*V1 > V2",
-                              obj = df,
-                              interval = 0.90,
-                              rope = NULL)
+df_mat <- matrix(
+  est$post_samp$pcors[,,51:25050][upper.tri(diag(16))],
+  nrow = 25000,
+  ncol = 16*15/2,
+  byrow = TRUE)
+df <- as.data.frame(df_mat)
+
+names(df) <-
+  sapply(colnames(Y), function(v) paste0(colnames(Y), "", v))[upper.tri(diag(16))]
+
+tst_df <- hypothesis("ab > 0",
+                      obj = df,
+                      ci_level = 0.90,
+                      rope = NULL
+                      # rope = c(-0.1, 0.1)
+                     )
+
 str(tst_df)
+tst_df
+
+
+
+tst_list <- list(tst_bggm, tst_nr, tst_bb, tst_df)

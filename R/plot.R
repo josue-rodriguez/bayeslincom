@@ -1,6 +1,11 @@
 plot.hypothesis <- function(x, bins = 30, hist_col = "black", hist_fill = "gray", bar_col = "tomato") {
 
-  plot_data <- data.frame(samples = x$post)
+  if ("post_samples" %in% names(x)) {
+    plot_data <- data.frame(samples = x$post_samples$pcors)
+  }
+  else {
+    plot_data <- data.frame(samples = x$samples)
+  }
 
   p <-
     ggplot(plot_data) +
@@ -8,8 +13,8 @@ plot.hypothesis <- function(x, bins = 30, hist_col = "black", hist_fill = "gray"
                    col = hist_col,
                    fill = hist_fill,
                    bins = bins) +
-    geom_segment(x = x$CrI[[1]],
-                 xend = x$CrI[[2]],
+    geom_segment(x = x$ci[[1]],
+                 xend = x$ci[[2]],
                  y = 0,
                  yend = 0,
                  col = bar_col,
@@ -20,8 +25,3 @@ plot.hypothesis <- function(x, bins = 30, hist_col = "black", hist_fill = "gray"
     }
   return(p)
 }
-
-
-plot(tst) +
-  theme_bw()
-

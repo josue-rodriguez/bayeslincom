@@ -1,25 +1,24 @@
 print.hypothesis <- function(x, ...) {
-  if (is(x, "hypothesis")) {
-    cat("NAME: Testing Hypotheses in GGMs with Credible Intervals \n\n")
-    cat("Call:", deparse(x$call), "\n")
-
+    cat("lhtInt: Testing Linear Hypotheses with Intervals\n")
+    cat("Call:\n")
+    print(x$call)
     cat("------ \n")
+
 
     cat("Hypothesis:", x$hypothesis, "\n")
 
+    if (!is.null(x$rope)) {
+      cat("ROPE: [", x$rope[[1]], ",", x$rope[[2]], "] \n")
+      cat(x$support, "\n")
+    }
     cat("------ \n")
 
-    cri <- round(x$CrI, 2)
+    ci <- round(x$ci, 2)
 
-    cat(paste0(x$cred*100, "%"), "CrI of the difference: [", cri[[1]], ",", cri[[2]], "] \n")
-    cat("ROPE: [", x$rope[[1]], ",", x$rope[[2]], "] \n")
+    cat(paste0(x$ci_level*100, "%"), "CrI for difference: [", ci[[1]], ",", ci[[2]], "] \n")
 
-
-    cat("Posterior Mean:", round(x$post_mean, 2), "\n")
-    cat("Posterior SD:", round(x$post_sd, 2), "\n")
+    cat("Mean of Difference:", round(x$mean_samples, 2), "\n")
+    cat("SD of Difference:", round(x$sd_samples, 2), "\n")
 
     cat("------ \n")
-
-    cat(x$support)
-  }
 }
