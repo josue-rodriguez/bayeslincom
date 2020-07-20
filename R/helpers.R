@@ -41,7 +41,7 @@ find_vars <- function (x) {
   else {
     out <- character(0)
   }
-  out
+  return(out)
 }
 
 # returns strings matching pattern

@@ -1,24 +1,39 @@
 print.hypothesis <- function(x, ...) {
-    cat("lhtInt: Testing Linear Hypotheses with Intervals\n")
+    ci <- round(x$ci, 2)
+
+    print_df <- data.frame(
+      mean = round(x$mean_samples, 2),
+      sd = round(x$sd_samples, 2),
+      ci_lb = ci[[1]],
+      ci_ub = ci[[2]]
+    )
+
+    cat("lhInt: Testing Linear Combinations with Intervals\n")
     cat("Call:\n")
     print(x$call)
     cat("------ \n")
 
 
-    cat("Hypothesis:", x$hypothesis, "\n")
+    cat("hypothesis:", x$hypothesis, "\n")
 
     if (!is.null(x$rope)) {
-      cat("ROPE: [", x$rope[[1]], ",", x$rope[[2]], "] \n")
-      cat(x$support, "\n")
+      cat("rope: [", x$rope[[1]], ",", x$rope[[2]], "] \n")
+
+      print_df$overlap <- x$rope_overlap
     }
     cat("------ \n")
 
-    ci <- round(x$ci, 2)
 
-    cat(paste0(x$ci_level*100, "%"), "CrI for difference: [", ci[[1]], ",", ci[[2]], "] \n")
+    print(print_df, row.names = FALSE, right = T)
 
-    cat("Mean of Difference:", round(x$mean_samples, 2), "\n")
-    cat("SD of Difference:", round(x$sd_samples, 2), "\n")
-
+    if (!is.null(x$support)) {
     cat("------ \n")
+    cat(x$support)
+    }
+
 }
+
+tst_bggm
+tst_bb
+tst_nr
+tst_df

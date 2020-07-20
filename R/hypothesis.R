@@ -132,13 +132,15 @@ hypothesis.BGGM <- function(hypothesis,
       support <- ifelse(excludes_rope,
                         paste0("Test is supported"),
                         paste0("Test is not supported"))
+      support <- as.character(support)
     }
     else {
       support <- ifelse(excludes_rope,
                         paste0("Test is not supported"),
                         paste0("Test is supported"))
+      support <- as.character(support)
     }
-
+    rope_overlap <- sum(rope[[1]] < post_eval & post_eval < rope[[2]]) / length(post_eval)
   }
   else {
     support <- NULL
@@ -147,6 +149,7 @@ hypothesis.BGGM <- function(hypothesis,
 
   out <- list(hypothesis = hypothesis,
               rope = rope,
+              rope_overlap = rope_overlap,
               post_samples = list(pcors = post_eval,
                                   fisher_z = post_eval_z),
               prior_samples = list(pcors = prior_eval,
@@ -155,7 +158,7 @@ hypothesis.BGGM <- function(hypothesis,
               ci_z = ci_z,
               mean_samples = post_mean,
               sd_samples = post_sd,
-              support = as.character(support),
+              support = support,
               ci_level = ci_level,
               call = match.call())
   class(out) <- "hypothesis"
@@ -254,12 +257,15 @@ hypothesis.GGM_bootstrap <- function(hypothesis,
       support <- ifelse(excludes_rope,
                         paste0("Test is supported"),
                         paste0("Test is not supported"))
+      support <- as.character(support)
     }
     else {
       support <- ifelse(excludes_rope,
                         paste0("Test is not supported"),
                         paste0("Test is supported"))
+      support <- as.character(support)
     }
+    rope_overlap <- sum(rope[[1]] < boot_eval & boot_eval < rope[[2]]) / length(boot_eval)
 
   }
   else {
@@ -272,7 +278,7 @@ hypothesis.GGM_bootstrap <- function(hypothesis,
               ci = ci,
               mean_samples = mean_samples,
               sd_samples = sd_samples,
-              support = as.character(support),
+              support = support,
               ci_level = ci_level,
               call = match.call())
 
@@ -359,13 +365,15 @@ hypothesis.data.frame <- function(hypothesis,
       support <- ifelse(excludes_rope,
                         paste0("Test is supported"),
                         paste0("Test is not supported"))
+      support <- as.character(support)
     }
     else {
       support <- ifelse(excludes_rope,
                         paste0("Test is not supported"),
                         paste0("Test is supported"))
+      support <- as.character(support)
     }
-
+    rope_overlap <- sum(rope[[1]] < samples_eval & samples_eval < rope[[2]]) / length(samples_eval)
   }
   else {
     support <- NULL
@@ -377,7 +385,7 @@ hypothesis.data.frame <- function(hypothesis,
               ci = ci,
               mean_samples = mean_samples,
               sd_samples = sd_samples,
-              support = as.character(support),
+              support = support,
               ci_level = ci_level,
               call = match.call())
 
@@ -478,13 +486,15 @@ hypothesis.bbcor <- function(hypothesis,
       support <- ifelse(excludes_rope,
                         paste0("Test is supported"),
                         paste0("Test is not supported"))
+      support <- as.character(support)
     }
     else {
       support <- ifelse(excludes_rope,
                         paste0("Test is not supported"),
                         paste0("Test is supported"))
+      support <- as.character(support)
     }
-
+    rope_overlap <- sum(rope[[1]] < boot_eval & boot_eval < rope[[2]]) / length(boot_eval)
   }
   else {
     support <- NULL
@@ -496,7 +506,7 @@ hypothesis.bbcor <- function(hypothesis,
               ci  = ci,
               mean_samples = mean_samples,
               sd_samples = sd_samples,
-              support = as.character(support),
+              support = support,
               ci_level = ci_level,
               call = match.call())
 
