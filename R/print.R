@@ -32,8 +32,3 @@ print.hypothesis <- function(x, ...) {
     }
 
 }
-
-tst_bggm
-tst_bb
-tst_nr
-tst_df
