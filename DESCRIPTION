@@ -1,12 +1,17 @@
 Package: bayeslincom
 Type: Package
-Title: GGM Inverval Tests
+Title: Linear Combinations of Bayesian Posterior Samples
 Version: 0.1.0
 Author: Josue E. Rodriguez
 Maintainer: Josue E. Rodriguez <josue.rodriguez594@gmail.com>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Computes point estimates, standard deviations, and credible intervals for 
+             linear combinations of posterior samples.
 Depends: R (>= 4.0.0)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
+Imports:
+  BGGM
+Suggests:
+  BBcor
+RoxygenNote: 7.1.1

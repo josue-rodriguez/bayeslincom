@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+R/test-hyp.R
+R/bayes_bootsrap.R

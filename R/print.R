@@ -1,17 +1,26 @@
+#' Print formatted summary of hypothesis
+#'
+#' @param x An object of class \code{hypothesis}
+#' @param ... Other arguments to be passed to \code{print}
+#' @return An object of class \code{hypothesis}
+#' @examples
+#' add(1, 1)
+#' @export
 print.hypothesis <- function(x, ...) {
-    ci <- round(x$ci, 2)
+    cri <- round(x$cri, 2)
 
     print_df <- data.frame(
       mean = round(x$mean_samples, 2),
       sd = round(x$sd_samples, 2),
-      ci_lb = ci[[1]],
-      ci_ub = ci[[2]]
+      cri_lb = cri[[1]],
+      cri_ub = cri[[2]]
     )
 
-    cat("lhInt: Testing Linear Combinations with Intervals\n")
+    cat("bayeslincom: linear combinations of posterior samples\n")
     cat("Call:\n")
     print(x$call)
-    cat("------ \n")
+    cat("\n")
+    # cat("------ \n")
 
 
     cat("hypothesis:", x$hypothesis, "\n")
@@ -23,7 +32,7 @@ print.hypothesis <- function(x, ...) {
     }
     cat("------ \n")
 
-
+    cat("summary of posterior:\n")
     print(print_df, row.names = FALSE, right = T)
 
     if (!is.null(x$support)) {
@@ -32,3 +41,4 @@ print.hypothesis <- function(x, ...) {
     }
 
 }
+

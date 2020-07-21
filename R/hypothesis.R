@@ -1,18 +1,27 @@
-# reserve function name
-hypothesis <- function(hypothesis,
-                       obj,
-                       ci_level,
-                       rope) {
+#' Perform a linear combination of posterior samples
+#'
+#' @param hypothesis A number
+#' @param obj A number
+#' @param obj An object of class \code{BGGM}, \code{bbcor}, or \code{data.frame}
+#' @return An object of class \code{hypothesis}
+#' @examples
+#' add(1, 1)
+#' @export
+hypothesis <- function(obj, ...) {
   UseMethod("hypothesis", obj)
 }
-
 
 ############################
 # ---- BGGM method ----
 ############################
+
+#' Hypothesis method for BGGM objects
+#'
+#' @export hypothesis.BGGM
+#' @export
 hypothesis.BGGM <- function(hypothesis,
                             obj,
-                            ci_level = 0.90,
+                            cri_level = 0.90,
                             rope = NULL) {
 
   stopifnot(length(hypothesis) == 1L & is.character(hypothesis))
@@ -42,9 +51,6 @@ hypothesis.BGGM <- function(hypothesis,
               ifelse(lr[2] != "0",
                      yes = paste0("-(", lr[2], ")"),
                      no = ""))
-
-  # extract variables in hyp
-  # vars <- find_vars(h)
 
   # extract all correlations in hyp
   vars_cors_list <- get_matches("[[:alnum:]]+--[[:alnum:]]+", h)
@@ -104,7 +110,7 @@ hypothesis.BGGM <- function(hypothesis,
   # name all columns
   dimnames(post)[[2]] <- dimnames(prior)[[2]] <- all_cors[upper_tri]
 
-  # evaluate transformations in post/prior
+  # evaluate combinations in post/prior
   post_eval <- eval(str2expression(h_eval), as.data.frame(post))
   post_eval_z <- BGGM:::fisher_r_to_z(post_eval)
 
@@ -112,37 +118,35 @@ hypothesis.BGGM <- function(hypothesis,
   prior_eval_z <- BGGM:::fisher_r_to_z(prior_eval)
 
   # bounds for credible interval
-  a <- (1 - ci_level) / 2
-  ci_bounds <- c(a, 1 - a)
+  a <- (1 - cri_level) / 2
+  cri_bounds <- c(a, 1 - a)
 
   # compute credible invervals
-  ci_z <- quantile(post_eval_z, ci_bounds)
-  ci <- quantile(post_eval, ci_bounds)
+  cri_z <- quantile(post_eval_z, cri_bounds)
+  cri <- quantile(post_eval, cri_bounds)
 
   # summary statistics
   post_mean <- mean(post_eval)
   post_sd <- sd(post_eval)
 
-
   if (!is.null(rope)) {
     # decision rule
-    excludes_rope <- excludes_rope(ci, rope, sign)
+    excludes_rope <- excludes_rope(cri, rope, sign)
+    rope_overlap <- sum(rope[[1]] < post_eval & post_eval < rope[[2]]) / length(post_eval)
 
     if (sign != "=") {
       support <- ifelse(excludes_rope,
                         paste0("Test is supported"),
                         paste0("Test is not supported"))
       support <- as.character(support)
-    }
-    else {
+    } else {
       support <- ifelse(excludes_rope,
                         paste0("Test is not supported"),
                         paste0("Test is supported"))
       support <- as.character(support)
     }
-    rope_overlap <- sum(rope[[1]] < post_eval & post_eval < rope[[2]]) / length(post_eval)
-  }
-  else {
+
+  } else {
     support <- NULL
   }
 
@@ -154,243 +158,15 @@ hypothesis.BGGM <- function(hypothesis,
                                   fisher_z = post_eval_z),
               prior_samples = list(pcors = prior_eval,
                                    fisher_z = prior_eval_z),
-              ci = ci,
-              ci_z = ci_z,
+              cri = cri,
+              cri_z = cri_z,
               mean_samples = post_mean,
               sd_samples = post_sd,
               support = support,
-              ci_level = ci_level,
+              cri_level = cri_level,
               call = match.call())
-  class(out) <- "hypothesis"
+  class(out) <- c("bayeslincom", "BGGM")
 
-  return(out)
-}
-
-
-
-############################
-# ---- GGMnonreg method ----
-############################
-
-hypothesis.GGM_bootstrap <- function(hypothesis,
-                                     obj,
-                                     ci_level = 0.90,
-                                     rope = NULL)
-{
-
-  stopifnot(length(hypothesis) == 1L & is.character(hypothesis))
-
-  # Extract variable names
-  all_vars <- dimnames(obj$dat)[[2]]
-
-  # Create p by p matrix of name combinations
-  all_cors <- sapply(all_vars,
-                     function(x) paste(all_vars, x, sep = "--"))
-
-  # remove whitespace
-  h <- gsub("[\\s\t\r\n]", "", hypothesis)
-
-  # extract sign
-  sign <- get_matches("=|<|>", h)
-
-  stopifnot(length(sign) == 1L & sign %in% c("=", "<", ">"))
-
-  # left and right hand sides
-  lr <- get_matches("[^=<>]+", h)
-
-  # write wrap lhs and rhs with parentheses
-  h <- paste0("(", lr[1], ")")
-
-  h <- paste0(h,
-              ifelse(lr[2] != "0",
-                     yes = paste0("-(", lr[2], ")"),
-                     no = ""))
-
-  # extract all correlations in hyp
-  vars_cors_list <- get_matches("[[:alnum:]]+--[[:alnum:]]+", h)
-  vars_cors <- unlist(vars_cors_list)
-
-  # add backticks for evaluation of hypotheses
-  h_eval <- h
-  for (vc in unique(vars_cors)) {
-    h_eval <- gsub(pattern = vc,
-                   replacement = paste0("`", vc, "`"),
-                   x = h_eval)
-  }
-
-  # check all parameters in hypothesis are valid
-  miss_pars <- setdiff(vars_cors, all_cors)
-  if (length(miss_pars)) {
-    miss_pars <- paste(miss_pars, collapse = ",")
-    stop(paste("Some variables not found in graph: \n", miss_pars))
-  }
-
-  # bootstrap samples
-  boot_samps_list <- lapply(x$boot_results, function(x) x$upper_tri)
-  boot_samps <- do.call(rbind, boot_samps_list)
-
-  # get upper.tri indices
-  p <- obj$p
-  upper_tri <- upper.tri(diag(p))
-  # name all columns
-  dimnames(boot_samps)[[2]] <- all_cors[upper_tri]
-
-  # evaluate combinations
-  boot_eval <- eval(str2expression(h_eval), as.data.frame(boot_samps))
-
-  # bounds for interval
-  a <- (1 - ci_level) / 2
-  ci_bounds <- c(a, 1 - a)
-
-  # compute  interval
-  ci <- quantile(boot_eval, ci_bounds)
-
-  # summary statistics
-  mean_samples <- mean(boot_eval)
-  sd_samples <- sd(boot_eval)
-
-  if (!is.null(rope)) {
-    # decision rule
-    excludes_rope <- excludes_rope(ci, rope, sign)
-
-    if (sign != "=") {
-      support <- ifelse(excludes_rope,
-                        paste0("Test is supported"),
-                        paste0("Test is not supported"))
-      support <- as.character(support)
-    }
-    else {
-      support <- ifelse(excludes_rope,
-                        paste0("Test is not supported"),
-                        paste0("Test is supported"))
-      support <- as.character(support)
-    }
-    rope_overlap <- sum(rope[[1]] < boot_eval & boot_eval < rope[[2]]) / length(boot_eval)
-
-  }
-  else {
-    support <- NULL
-  }
-
-  out <- list(hypothesis = hypothesis,
-              rope = rope,
-              samples = boot_eval,
-              ci = ci,
-              mean_samples = mean_samples,
-              sd_samples = sd_samples,
-              support = support,
-              ci_level = ci_level,
-              call = match.call())
-
-
-  class(out) <- "hypothesis"
-  return(out)
-}
-
-############################
-# ---- data.frame method ----
-############################
-hypothesis.data.frame <- function(hypothesis,
-                                  obj,
-                                  ci_level = 0.90,
-                                  rope = NULL)
-{
-
-  stopifnot(length(hypothesis) == 1L & is.character(hypothesis))
-
-  # Extract variable names
-  all_vars <- dimnames(obj)[[2]]
-
-  # Create p by p matrix of name combinations
-  # all_cors <- sapply(all_vars,
-  #                    function(x) paste(all_vars, x, sep = "--"))
-
-  # remove whitespace from hypothesis
-  h <- gsub("[ \t\r\n]", "", hypothesis)
-
-  # extract sign
-  sign <- get_matches("=|<|>", h)
-
-  stopifnot(length(sign) == 1L & sign %in% c("=", "<", ">"))
-
-  # left and right hand sides
-  lr <- get_matches("[^=<>]+", h)
-
-  # write wrap lhs and rhs with parentheses
-  h <- paste0("(", lr[1], ")")
-
-  h <- paste0(h,
-              ifelse(lr[2] != "0",
-                     yes = paste0("-(", lr[2], ")"),
-                     no = ""))
-
-  # extract all correlations in hyp
-  vars <- find_vars(h)
-  # vars_cors <- unlist(vars_cors_list)
-
-  # add backticks for evaluation of hypotheses
-  h_eval <- h
-  for (v in unique(vars)) {
-    h_eval <- gsub(pattern = v,
-                   replacement = paste0("`", v, "`"),
-                   x = h_eval)
-  }
-
-  # check all parameters in hypothesis are valid
-  miss_pars <- setdiff(vars, all_vars)
-  if (length(miss_pars)) {
-    miss_pars <- paste(miss_pars, collapse = ",")
-    stop(paste("Some variables not found in graph: \n", miss_pars))
-  }
-
-  # evaluate combinations
-  samples_eval <- eval(str2expression(h_eval), obj)
-
-  # bounds for interval
-  a <- (1 - ci_level) / 2
-  ci_bounds <- c(a, 1 - a)
-
-  # compute  invervals
-  ci <- quantile(samples_eval, ci_bounds)
-
-  # summary statistics
-  mean_samples <- mean(samples_eval)
-  sd_samples <- sd(samples_eval)
-
-  if (!is.null(rope)) {
-    # decision rule
-    excludes_rope <- excludes_rope(ci, rope, sign)
-
-    if (sign != "=") {
-      support <- ifelse(excludes_rope,
-                        paste0("Test is supported"),
-                        paste0("Test is not supported"))
-      support <- as.character(support)
-    }
-    else {
-      support <- ifelse(excludes_rope,
-                        paste0("Test is not supported"),
-                        paste0("Test is supported"))
-      support <- as.character(support)
-    }
-    rope_overlap <- sum(rope[[1]] < samples_eval & samples_eval < rope[[2]]) / length(samples_eval)
-  }
-  else {
-    support <- NULL
-  }
-
-  out <- list(hypothesis = hypothesis,
-              rope = rope,
-              samples = samples_eval,
-              ci = ci,
-              mean_samples = mean_samples,
-              sd_samples = sd_samples,
-              support = support,
-              ci_level = ci_level,
-              call = match.call())
-
-
-  class(out) <- "hypothesis"
   return(out)
 }
 
@@ -398,12 +174,15 @@ hypothesis.data.frame <- function(hypothesis,
 # ---- BBcor method ----
 #########################
 
+#' #' Hypothesis method for bbcor objects
+#'
+#' @param hypothesis A number
+#' @export hypothesis.bbcor
+#' @export
 hypothesis.bbcor <- function(hypothesis,
                              obj,
-                             ci_level = 0.90,
-                             rope = NULL)
-{
-
+                             cri_level = 0.90,
+                             rope = NULL) {
   stopifnot(length(hypothesis) == 1L & is.character(hypothesis))
 
   # Extract variable names
@@ -458,7 +237,7 @@ hypothesis.bbcor <- function(hypothesis,
 
   # bootstrap samples
   boot_samps_list <- sapply(1:iter,
-                              function(s) obj$samps[,,s][upper_tri])
+                            function(s) obj$samps[,,s][upper_tri])
   boot_samps <- t(boot_samps_list)
 
   # name all columns
@@ -468,11 +247,11 @@ hypothesis.bbcor <- function(hypothesis,
   boot_eval <- eval(str2expression(h_eval), as.data.frame(boot_samps))
 
   # bounds for interval
-  a <- (1 - ci_level) / 2
-  ci_bounds <- c(a, 1 - a)
+  a <- (1 - cri_level) / 2
+  cri_bounds <- c(a, 1 - a)
 
   # compute  invervals
-  ci <- quantile(boot_eval, ci_bounds)
+  cri <- quantile(boot_eval, cri_bounds)
 
   # summary statistics
   mean_samples <- mean(boot_eval)
@@ -480,37 +259,144 @@ hypothesis.bbcor <- function(hypothesis,
 
   if (!is.null(rope)) {
     # decision rule
-    excludes_rope <- excludes_rope(ci, rope, sign)
+    excludes_rope <- excludes_rope(cri, rope, sign)
 
     if (sign != "=") {
       support <- ifelse(excludes_rope,
-                        paste0("Test is supported"),
-                        paste0("Test is not supported"))
+                        paste0("test is supported"),
+                        paste0("test is not supported"))
       support <- as.character(support)
-    }
-    else {
+    } else {
       support <- ifelse(excludes_rope,
-                        paste0("Test is not supported"),
-                        paste0("Test is supported"))
+                        paste0("test is not supported"),
+                        paste0("test is supported"))
       support <- as.character(support)
     }
     rope_overlap <- sum(rope[[1]] < boot_eval & boot_eval < rope[[2]]) / length(boot_eval)
-  }
-  else {
+  } else {
     support <- NULL
   }
 
   out <- list(hypothesis = hypothesis,
               rope = rope,
               samples = boot_eval,
-              ci  = ci,
+              cri  = cri,
               mean_samples = mean_samples,
               sd_samples = sd_samples,
               support = support,
-              ci_level = ci_level,
+              cri_level = cri_level,
               call = match.call())
 
 
-  class(out) <- "hypothesis"
+  class(out) <- c("bayeslincom", "bbcor")
+  return(out)
+}
+
+############################
+# ---- data.frame method ----
+############################
+
+#' #' Hypothesis method for data.frame objects
+#'
+#' @param hypothesis A number
+#' @export hypothesis.data.frame
+#' @export
+hypothesis.data.frame <- function(hypothesis,
+                                  obj,
+                                  cri_level = 0.90,
+                                  rope = NULL) {
+
+  stopifnot(length(hypothesis) == 1L & is.character(hypothesis))
+
+  # Extract variable names
+  all_vars <- dimnames(obj)[[2]]
+
+  # Create p by p matrix of name combinations
+  # all_cors <- sapply(all_vars,
+  #                    function(x) paste(all_vars, x, sep = "--"))
+
+  # remove whitespace from hypothesis
+  h <- gsub("[ \t\r\n]", "", hypothesis)
+
+  # extract sign
+  sign <- get_matches("=|<|>", h)
+
+  stopifnot(length(sign) == 1L & sign %in% c("=", "<", ">"))
+
+  # left and right hand sides
+  lr <- get_matches("[^=<>]+", h)
+
+  # write wrap lhs and rhs with parentheses
+  h <- paste0("(", lr[1], ")")
+
+  h <- paste0(h,
+              ifelse(lr[2] != "0",
+                     yes = paste0("-(", lr[2], ")"),
+                     no = ""))
+
+  # extract all variables in hyp
+  vars <- find_vars(h)
+
+  # add backticks for evaluation of hypotheses
+  h_eval <- h
+  for (v in unique(vars)) {
+    h_eval <- gsub(pattern = v,
+                   replacement = paste0("`", v, "`"),
+                   x = h_eval)
+  }
+
+  # check all parameters in hypothesis are valid
+  miss_pars <- setdiff(vars, all_vars)
+  if (length(miss_pars)) {
+    miss_pars <- paste(miss_pars, collapse = ",")
+    stop(paste("Some variables not found in graph: \n", miss_pars))
+  }
+
+  # evaluate combinations
+  samples_eval <- eval(str2expression(h_eval), obj)
+
+  # bounds for interval
+  a <- (1 - cri_level) / 2
+  cri_bounds <- c(a, 1 - a)
+
+  # compute  invervals
+  cri <- quantile(samples_eval, cri_bounds)
+
+  # summary statistics
+  mean_samples <- mean(samples_eval)
+  sd_samples <- sd(samples_eval)
+
+  if (!is.null(rope)) {
+    # decision rule
+    excludes_rope <- excludes_rope(cri, rope, sign)
+
+    if (sign != "=") {
+      support <- ifelse(excludes_rope,
+                        paste0("Test is supported"),
+                        paste0("Test is not supported"))
+      support <- as.character(support)
+    } else {
+      support <- ifelse(excludes_rope,
+                        paste0("Test is not supported"),
+                        paste0("Test is supported"))
+      support <- as.character(support)
+    }
+    rope_overlap <- sum(rope[[1]] < samples_eval & samples_eval < rope[[2]]) / length(samples_eval)
+  } else {
+    support <- NULL
+  }
+
+  out <- list(hypothesis = hypothesis,
+              rope = rope,
+              samples = samples_eval,
+              cri = cri,
+              mean_samples = mean_samples,
+              sd_samples = sd_samples,
+              support = support,
+              cri_level = cri_level,
+              call = match.call())
+
+
+  class(out) <- c("bayeslincom", "data.frame")
   return(out)
 }
