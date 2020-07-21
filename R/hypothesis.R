@@ -11,6 +11,7 @@ hypothesis <- function(obj, ...) {
   UseMethod("hypothesis", obj)
 }
 
+
 ############################
 # ---- BGGM method ----
 ############################
@@ -33,15 +34,15 @@ hypothesis.BGGM <- function(hypothesis,
   all_cors <- sapply(all_vars,
                      function(x) paste(all_vars, x, sep = "--"))
 
-  # remove whitespace
-  h <- gsub("[\\s\t\r\n]", "", hypothesis)
+  # remove whitespace, space in bracekets is intentional
+  h <- gsub("[ \t\r\n]", "", hypothesis)
 
   # extract sign
   sign <- get_matches("=|<|>", h)
 
   stopifnot(length(sign) == 1L & sign %in% c("=", "<", ">"))
 
-  # left and right hand sides
+  # left and right hand sides of hypothesis
   lr <- get_matches("[^=<>]+", h)
 
   # write wrap lhs and rhs with parentheses
@@ -89,26 +90,8 @@ hypothesis.BGGM <- function(hypothesis,
     byrow = TRUE
     )
 
-  # sample prior and store in matrix
-  prior_samps <- BGGM:::sample_prior(
-    Y = matrix(0, p, p),
-    iter = iter,
-    delta = BGGM:::delta_solve(obj$call$prior_sd),
-    epsilon = 0.01,
-    prior_only = 1,
-    explore = 0,
-    progress = 1
-  )
-
-  prior <- matrix(
-    data = prior_samps$pcors[,,1:iter][upper_tri],
-    nrow = iter,
-    ncol = p*(p-1)*0.5,
-    byrow = TRUE
-  )
-
   # name all columns
-  dimnames(post)[[2]] <- dimnames(prior)[[2]] <- all_cors[upper_tri]
+  dimnames(post)[[2]] <- all_vars[upper_tri]
 
   # evaluate combinations in post/prior
   post_eval <- eval(str2expression(h_eval), as.data.frame(post))
@@ -154,10 +137,8 @@ hypothesis.BGGM <- function(hypothesis,
   out <- list(hypothesis = hypothesis,
               rope = rope,
               rope_overlap = rope_overlap,
-              post_samples = list(pcors = post_eval,
-                                  fisher_z = post_eval_z),
-              prior_samples = list(pcors = prior_eval,
-                                   fisher_z = prior_eval_z),
+              samples = list(pcors = post_eval,
+                             fisher_z = post_eval_z),
               cri = cri,
               cri_z = cri_z,
               mean_samples = post_mean,
@@ -174,7 +155,7 @@ hypothesis.BGGM <- function(hypothesis,
 # ---- BBcor method ----
 #########################
 
-#' #' Hypothesis method for bbcor objects
+#' Hypothesis method for bbcor objects
 #'
 #' @param hypothesis A number
 #' @export hypothesis.bbcor
@@ -397,6 +378,6 @@ hypothesis.data.frame <- function(hypothesis,
               call = match.call())
 
 
-  class(out) <- c("bayeslincom", "data.frame")
+  class(out) <- c("bayeslincom")
   return(out)
 }

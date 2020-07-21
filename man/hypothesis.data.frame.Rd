@@ -2,7 +2,7 @@
 % Please edit documentation in R/hypothesis.R
 \name{hypothesis.data.frame}
 \alias{hypothesis.data.frame}
-\title{Hypothesis method for data.frames}
+\title{#' Hypothesis method for data.frame objects}
 \usage{
 \method{hypothesis}{data.frame}(hypothesis, obj, cri_level = 0.9, rope = NULL)
 }
@@ -10,5 +10,5 @@
 \item{hypothesis}{A number}
 }
 \description{
-Hypothesis method for data.frames
+#' Hypothesis method for data.frame objects
 }

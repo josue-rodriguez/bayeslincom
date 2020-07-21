@@ -1,3 +1,50 @@
+get_corr_samples <- function(obj, all_vars) {
+
+  # columns
+  p <- ncol(obj$Y)
+
+  # upper triangle indices
+  upper_tri <- upper.tri(diag(p))
+
+  # number of iterations in original object
+  iter <- obj$iter
+
+  if (is(obj, "BGGM")) {
+    # place posterior samples in matrix
+    post_samps <- matrix(
+      data = obj$post_samp$pcors[,,51:(iter + 50)][upper_tri],
+      nrow = iter,
+      ncol = p*(p-1)*0.5,
+      byrow = TRUE
+    )
+
+    # name all columns
+    dimnames(post_samps)[[2]] <- all_vars[upper_tri]
+
+  } else {
+    post_samps_list <- sapply(1:iter,
+                              function(s) obj$samps[,,s][upper_tri])
+    post_samps <- t(post_samps_list)
+
+    # name all columns
+    dimnames(post_samps)[[2]] <- all_vars[upper_tri]
+  }
+  post_samps <- as.data.frame(post_samps)
+  return(post_samps)
+}
+
+extract_var_names <- function(obj) {
+
+  if (is(obj, "BGGM") || is(obj, "bbcor")) {
+    var_names <- dimnames(obj$Y)[[2]]
+  } else if (is(obj, "data.frame")) {
+    var_names <-  dimnames(obj)[[2]]
+  } else {
+    stop("Currently only objects of type 'data.frame', 'BGGM', and 'bbcor' are supported")
+  }
+  return(var_names)
+}
+
 # Code from brms:::find_vars
 find_vars <- function (x) {
   regex_all <- paste0("([^([:digit:]|[:punct:])]",

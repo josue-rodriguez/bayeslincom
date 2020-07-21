@@ -2,10 +2,10 @@
 % Please edit documentation in R/hypothesis.R
 \name{hypothesis.BGGM}
 \alias{hypothesis.BGGM}
-\title{method for bggm}
+\title{Hypothesis method for BGGM objects}
 \usage{
 \method{hypothesis}{BGGM}(hypothesis, obj, cri_level = 0.9, rope = NULL)
 }
 \description{
-method for bggm
+Hypothesis method for BGGM objects
 }

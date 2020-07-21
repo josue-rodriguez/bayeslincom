@@ -2,7 +2,7 @@
 % Please edit documentation in R/hypothesis.R
 \name{hypothesis.bbcor}
 \alias{hypothesis.bbcor}
-\title{method for bggm}
+\title{Hypothesis method for bbcor objects}
 \usage{
 \method{hypothesis}{bbcor}(hypothesis, obj, cri_level = 0.9, rope = NULL)
 }
@@ -10,5 +10,5 @@
 \item{hypothesis}{A number}
 }
 \description{
-method for bggm
+Hypothesis method for bbcor objects
 }

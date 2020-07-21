@@ -1,8 +1,8 @@
-#' Print formatted summary of hypothesis
+#' Print formatted summary of a \code{bayeslincom} object
 #'
-#' @param x An object of class \code{hypothesis}
+#' @param x An object of class \code{bayeslincom}
 #' @param ... Other arguments to be passed to \code{print}
-#' @return An object of class \code{hypothesis}
+#' @return An object of class \code{bayeslincom}
 #' @examples
 #' add(1, 1)
 #' @export print.bayeslincom
@@ -20,8 +20,7 @@ print.bayeslincom <- function(x, ...) {
     cat("bayeslincom: linear combinations of posterior samples\n")
     cat("Call:\n")
     print(x$call)
-    cat("\n")
-    # cat("------ \n")
+    cat("------ \n")
 
 
     cat("hypothesis:", x$hypothesis, "\n")
@@ -40,6 +39,4 @@ print.bayeslincom <- function(x, ...) {
     cat("------ \n")
     cat(x$support)
     }
-
 }
-
