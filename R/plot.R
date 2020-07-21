@@ -1,4 +1,14 @@
-plot.hypothesis <- function(x,
+#' Perform a linear combination of posterior samples
+#'
+#' @param hypothesis A number
+#' @param obj A number
+#' @param obj An object of class \code{BGGM}, \code{bbcor}, or \code{data.frame}
+#' @return An object of class \code{hypothesis}
+#' @examples
+#' add(1, 1)
+#' @export plot.bayeslincom
+#' @export
+plot.bayeslincom <- function(x,
                             bins = 30, hist_col = "black",
                             hist_fill = "gray", bar_col = "tomato") {
 

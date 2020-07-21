@@ -5,8 +5,9 @@
 #' @return An object of class \code{hypothesis}
 #' @examples
 #' add(1, 1)
+#' @export print.bayeslincom
 #' @export
-print.hypothesis <- function(x, ...) {
+print.bayeslincom <- function(x, ...) {
     cri <- round(x$cri, 2)
 
     print_df <- data.frame(
