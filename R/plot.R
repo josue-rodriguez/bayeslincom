@@ -1,6 +1,6 @@
 #' Perform a linear combination of posterior samples
 #'
-#' @param hypothesis A number
+#' @param x An object of class
 #' @param obj A number
 #' @param obj An object of class \code{BGGM}, \code{bbcor}, or \code{data.frame}
 #' @return An object of class \code{hypothesis}
@@ -14,8 +14,8 @@ plot.bayeslincom <- function(x, bins = 30,
                              hist_fill = "gray", bar_col = "steelblue") {
 
 
-  if (is(x, "BGGM")) {
-    plot_data <- data.frame(samples = x$post_samples$pcors)
+  if (is(x$samples, "list")) {
+    plot_data <- data.frame(samples = x$samples$pcors)
   } else {
     plot_data <- data.frame(samples = x$samples)
   }

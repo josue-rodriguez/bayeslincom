@@ -2,20 +2,20 @@
 % Please edit documentation in R/print.R
 \name{print.bayeslincom}
 \alias{print.bayeslincom}
-\title{Print formatted summary of hypothesis}
+\title{Print formatted summary of a \code{bayeslincom} object}
 \usage{
 \method{print}{bayeslincom}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{hypothesis}}
+\item{x}{An object of class \code{bayeslincom}}
 
 \item{...}{Other arguments to be passed to \code{print}}
 }
 \value{
-An object of class \code{hypothesis}
+An object of class \code{bayeslincom}
 }
 \description{
-Print formatted summary of hypothesis
+Print formatted summary of a \code{bayeslincom} object
 }
 \examples{
 add(1, 1)

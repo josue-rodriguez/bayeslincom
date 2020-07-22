@@ -10,7 +10,7 @@
   point_col = "black",
   hist_col = "black",
   hist_fill = "gray",
-  bar_col = "tomato"
+  bar_col = "steelblue"
 )
 }
 \arguments{

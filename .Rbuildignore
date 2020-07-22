@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^R\test-hyp.R$
-^R\bayes_bootstrap.R$
-^R\lin_comb2.R$
+^test-hyp\.R$
+^bayes_bootstrap\.R$
+^lin_comb2\.R$
 ^README\.Rmd$

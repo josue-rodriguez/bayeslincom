@@ -10,8 +10,9 @@ Depends: R (>= 4.0.0)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
+Imports:
+  ggplot2,
+  BGGM
 Suggests:
-  BGGM,
-  BBcor,
-  ggplot2
+  BBcor
 RoxygenNote: 7.1.1

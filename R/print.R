@@ -23,7 +23,7 @@ print.bayeslincom <- function(x, ...) {
     cat("------ \n")
 
 
-    cat("hypothesis:", x$hypothesis, "\n")
+    cat("combination:", x$lin_comb, "\n")
 
     if (!is.null(x$rope)) {
       cat("rope: [", x$rope[[1]], ",", x$rope[[2]], "] \n")
