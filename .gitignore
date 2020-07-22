@@ -4,3 +4,4 @@
 .Ruserdata
 R/test-hyp.R
 R/bayes_bootsrap.R
+R/lin_comb2.R

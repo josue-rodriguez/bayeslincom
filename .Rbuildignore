@@ -2,3 +2,5 @@
 ^\.Rproj\.user$
 ^R\test-hyp.R$
 ^R\bayes_bootstrap.R$
+^R\lin_comb2.R$
+^README\.Rmd$
