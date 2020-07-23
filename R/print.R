@@ -2,9 +2,7 @@
 #'
 #' @param x An object of class \code{bayeslincom}
 #' @param ... Other arguments to be passed to \code{print}
-#' @return An object of class \code{bayeslincom}
-#' @examples
-#' add(1, 1)
+#' @return A formatted summary of posterior samples
 #' @export print.bayeslincom
 #' @export
 print.bayeslincom <- function(x, ...) {
@@ -20,8 +18,8 @@ print.bayeslincom <- function(x, ...) {
     cat("bayeslincom: linear combinations of posterior samples\n")
     cat("Call:\n")
     print(x$call)
-    cat("------ \n")
 
+    cat("------ \n")
 
     cat("combination:", x$lin_comb, "\n")
 
@@ -30,6 +28,7 @@ print.bayeslincom <- function(x, ...) {
 
       print_df$overlap <- x$rope_overlap
     }
+
     cat("------ \n")
 
     cat("summary of posterior:\n")

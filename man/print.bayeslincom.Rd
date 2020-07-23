@@ -12,11 +12,8 @@
 \item{...}{Other arguments to be passed to \code{print}}
 }
 \value{
-An object of class \code{bayeslincom}
+A formatted summary of posterior samples
 }
 \description{
 Print formatted summary of a \code{bayeslincom} object
-}
-\examples{
-add(1, 1)
 }

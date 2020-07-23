@@ -45,7 +45,7 @@ clean_comb <- function(lin_comb) {
   # left and right hand sides of hypothesis
   lr <- get_matches("[^=<>]+", comb)
 
-  # write wrap lhs and rhs with parentheses
+  # wrap lhs and rhs with parentheses
   comb <- paste0("(", lr[1], ")")
 
   comb <- paste0(comb,
@@ -57,18 +57,12 @@ clean_comb <- function(lin_comb) {
 
 # extract samples from objects of type 'BGGM' or 'bbcor'
 get_corr_samples <- function(obj, all_vars) {
-
-  # columns
   p <- ncol(obj$Y)
-
-  # upper triangle indices
   upper_tri <- upper.tri(diag(p))
-
-  # number of iterations in original object
   iter <- obj$iter
 
+  # place posterior samples in matrix
   if (is(obj, "BGGM")) {
-    # place posterior samples in matrix
     post_samps <- matrix(
       data = obj$post_samp$pcors[,,51:(iter + 50)][upper_tri],
       nrow = iter,
@@ -84,14 +78,13 @@ get_corr_samples <- function(obj, all_vars) {
                               function(s) obj$samps[,,s][upper_tri])
     post_samps <- t(post_samps_list)
 
-    # name all columns
     dimnames(post_samps)[[2]] <- all_vars[upper_tri]
   }
   post_samps <- as.data.frame(post_samps)
   return(post_samps)
 }
 
-# extract variable names for correlations
+# extract variable names
 extract_var_names <- function(obj, is_corr) {
   # check if samples are (partial) correlations
   is_corr <- is(obj, "BGGM") || is(obj, "bbcor")
@@ -154,11 +147,9 @@ excludes_rope <- function(quantiles, rope, sign) {
   return(excludes_rope)
 }
 
-
 # creates string representing a node's
 # 'Expected Influence' (Robinaugh et al. 2016)
 make_ei_hyp <- function(node, data) {
-
   # number of columns
   p <- ncol(data)
 

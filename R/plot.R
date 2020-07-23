@@ -1,19 +1,27 @@
 #' Perform a linear combination of posterior samples
 #'
-#' @param x An object of class
-#' @param obj A number
-#' @param obj An object of class \code{BGGM}, \code{bbcor}, or \code{data.frame}
-#' @return An object of class \code{hypothesis}
-#' @importFrom  ggplot2 ggplot aes geom_histogram geom_point geom_segment geom_vline
+#' @param x An object of class \code{bayeslincom}
+#' @param bins Number of bins
+#' @param point_col Color for point indicating mean of posterior
+#' @param hist_col Color for histogram edges
+#' @param hist_fill Color for histogram bars
+#' @param bar_col Color of bar for credible interval
+#' @return A plot
 #' @examples
-#' add(1, 1)
+#'Y <- BGGM::ptsd
+#'colnames(Y) <- letters[1:20]
+#'est <- BGGM::estimate(Y)
+#'bggm_comb <- lin_comb("a--c + a--d > b--c + b--d",
+#'                     obj = est,
+#'                     cri_level = 0.90,
+#'                     rope = c(-0.1, 0.1))
+#'plot(bggm_comb)
+#' @importFrom  ggplot2 ggplot aes geom_histogram geom_point geom_segment geom_vline
 #' @export plot.bayeslincom
 #' @export
 plot.bayeslincom <- function(x, bins = 30,
                              point_col = "black", hist_col = "black",
                              hist_fill = "gray", bar_col = "steelblue") {
-
-
   if (is(x$samples, "list")) {
     plot_data <- data.frame(samples = x$samples$pcors)
   } else {

@@ -7,7 +7,13 @@
 lin_comb.bbcor(lin_comb, obj, cri_level = 0.9, rope = NULL)
 }
 \arguments{
-\item{hypothesis}{A number}
+\item{lin_comb}{A string specifying a linear combination of variables}
+
+\item{obj}{An object of class \code{BGGM}, \code{bbcor}, or a \code{data.frame} of posterior samples}
+
+\item{cri_level}{The level for which a credible interval should be computed}
+
+\item{rope}{Specify a ROPE. Optional.}
 }
 \description{
 Hypothesis method for bbcor objects

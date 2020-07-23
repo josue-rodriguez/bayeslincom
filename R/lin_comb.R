@@ -1,11 +1,19 @@
 #' Perform a linear combination of posterior samples
 #'
-#' @param hypothesis A number
-#' @param obj A number
-#' @param obj An object of class \code{BGGM}, \code{bbcor}, or \code{data.frame}
-#' @return An object of class \code{hypothesis}
+#' @param lin_comb A string specifying a linear combination of variables
+#' @param obj An object of class \code{BGGM}, \code{bbcor}, or a \code{data.frame} of posterior samples
+#' @param cri_level The level for which a credible interval should be computed
+#' @param rope Specify a ROPE. Optional.
+#' @return An object of class \code{lin_comb}
 #' @examples
-#' add(1, 1)
+#'Y <- BGGM::ptsd
+#'colnames(Y) <- letters[1:20]
+#'est <- BGGM::estimate(Y)
+#'bggm_comb <- lin_comb("a--c + a--d > b--c + b--d",
+#'                     obj = est,
+#'                     cri_level = 0.90,
+#'                     rope = c(-0.1, 0.1))
+#'bggm_comb
 #' @export
 lin_comb <- function(lin_comb,
                      obj,
@@ -28,7 +36,6 @@ lin_comb <- function(lin_comb,
   if (is(obj, "bbcor")) {
     out <- lin_comb.bbcor(lin_comb, obj, cri_level, rope)
   }
-
   return(out)
 }
 
@@ -37,12 +44,14 @@ lin_comb <- function(lin_comb,
 # ---- BGGM method ----
 ############################
 
+#' Hypothesis method for bbcor objects
+#'
+#' @inheritParams lin_comb
+#' @export
 lin_comb.BGGM <- function(lin_comb,
                           obj,
                           cri_level = 0.90,
                           rope = NULL) {
-
-
   # Extract variable names
   all_vars <- extract_var_names(obj)
 
@@ -69,8 +78,9 @@ lin_comb.BGGM <- function(lin_comb,
 
   post_samps <- get_corr_samples(obj, all_vars)
 
-  # evaluate combinations in post/prior
-  post_eval <- eval(str2expression(comb_eval), post_samps)
+  # evaluate combinations in posterior samples
+  comb_expr <- str2expression(comb_eval)
+  post_eval <- eval(comb_expr, post_samps)
   post_eval_z <- BGGM:::fisher_r_to_z(post_eval)
 
   # bounds for credible interval
@@ -98,7 +108,7 @@ lin_comb.BGGM <- function(lin_comb,
               cri_level = cri_level,
               call = match.call())
 
-  class(out) <- c("bayeslincom")
+  class(out) <- "bayeslincom"
   return(out)
 }
 
@@ -108,7 +118,8 @@ lin_comb.BGGM <- function(lin_comb,
 
 #' Hypothesis method for bbcor objects
 #'
-#' @param hypothesis A number
+#' @inheritParams lin_comb
+#' @export
 lin_comb.bbcor <- function(lin_comb,
                            obj,
                            cri_level = 0.90,
@@ -139,7 +150,8 @@ lin_comb.bbcor <- function(lin_comb,
   post_samps <- get_corr_samples(obj, all_vars)
 
   # evaluate combinations in post/prior
-  post_eval <- eval(str2expression(comb_eval), post_samps)
+  comb_expr <- str2expression(comb_eval)
+  post_eval <- eval(comb_expr, post_samps)
 
   # bounds for credible interval
   a <- (1 - cri_level) / 2
@@ -163,7 +175,7 @@ lin_comb.bbcor <- function(lin_comb,
               cri_level = cri_level,
               call = match.call())
 
-  class(out) <- c("bayeslincom")
+  class(out) <- "bayeslincom"
   return(out)
 }
 
@@ -173,12 +185,12 @@ lin_comb.bbcor <- function(lin_comb,
 
 #' #' Hypothesis method for data.frame objects
 #'
-#' @param hypothesis A number
+#' @inheritParams lin_comb
+#' @export
 lin_comb.data.frame <- function(lin_comb,
                                 obj,
                                 cri_level = 0.90,
                                 rope = NULL) {
-
   all_vars <- extract_var_names(obj)
 
   comb <- clean_comb(lin_comb)
@@ -202,7 +214,8 @@ lin_comb.data.frame <- function(lin_comb,
   }
 
   # evaluate combinations in post/prior
-  post_eval <- eval(str2expression(comb_eval), as.data.frame(obj))
+  comb_expr <- str2expression(comb_eval)
+  post_eval <- eval(comb_expr, as.data.frame(obj))
 
   # bounds for credible interval
   a <- (1 - cri_level) / 2
@@ -226,6 +239,6 @@ lin_comb.data.frame <- function(lin_comb,
               cri_level = cri_level,
               call = match.call())
 
-  class(out) <- c("bayeslincom")
+  class(out) <- "bayeslincom"
   return(out)
 }

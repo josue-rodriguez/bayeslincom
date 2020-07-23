@@ -14,16 +14,31 @@
 )
 }
 \arguments{
-\item{hypothesis}{A number}
+\item{x}{An object of class \code{bayeslincom}}
 
-\item{obj}{An object of class \code{BGGM}, \code{bbcor}, or \code{data.frame}}
+\item{bins}{Number of bins}
+
+\item{point_col}{Color for point indicating mean of posterior}
+
+\item{hist_col}{Color for histogram edges}
+
+\item{hist_fill}{Color for histogram bars}
+
+\item{bar_col}{Color of bar for credible interval}
 }
 \value{
-An object of class \code{hypothesis}
+A plot
 }
 \description{
 Perform a linear combination of posterior samples
 }
 \examples{
-add(1, 1)
+Y <- BGGM::ptsd
+colnames(Y) <- letters[1:20]
+est <- BGGM::estimate(Y)
+bggm_comb <- lin_comb("a--c + a--d > b--c + b--d",
+                    obj = est,
+                    cri_level = 0.90,
+                    rope = c(-0.1, 0.1))
+plot(bggm_comb)
 }

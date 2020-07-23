@@ -7,16 +7,27 @@
 lin_comb(lin_comb, obj, cri_level = 0.9, rope = NULL)
 }
 \arguments{
-\item{obj}{An object of class \code{BGGM}, \code{bbcor}, or \code{data.frame}}
+\item{lin_comb}{A string specifying a linear combination of variables}
 
-\item{hypothesis}{A number}
+\item{obj}{An object of class \code{BGGM}, \code{bbcor}, or a \code{data.frame} of posterior samples}
+
+\item{cri_level}{The level for which a credible interval should be computed}
+
+\item{rope}{Specify a ROPE. Optional.}
 }
 \value{
-An object of class \code{hypothesis}
+An object of class \code{lin_comb}
 }
 \description{
 Perform a linear combination of posterior samples
 }
 \examples{
-add(1, 1)
+Y <- BGGM::ptsd
+colnames(Y) <- letters[1:20]
+est <- BGGM::estimate(Y)
+bggm_comb <- lin_comb("a--c + a--d > b--c + b--d",
+                    obj = est,
+                    cri_level = 0.90,
+                    rope = c(-0.1, 0.1))
+bggm_comb
 }
