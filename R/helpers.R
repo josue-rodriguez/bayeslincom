@@ -181,7 +181,7 @@ make_ei_hyp <- function(node, data) {
 
 
 ############################
-# ---- BGGM method ----
+# ---- BGGM method ---
 ############################
 
 # Hypothesis method for bbcor objects
