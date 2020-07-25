@@ -103,7 +103,8 @@ The above can also be implemented with the `R` package **multcomp**.
 library(multcomp)
 
 # fit model
-fit_lm <- lm(mpg ~ vs + hp, Y) 
+fit_lm <- lm(mpg ~ vs + hp, 
+             data = Y) 
 
 # confidence interval
 confint(
