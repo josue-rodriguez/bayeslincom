@@ -1,9 +1,12 @@
-rope_helper <- function(rope, lin_comb, cri, post_eval) {
+#' @importFrom stats quantile sd
+
+ rope_helper <- function(rope, lin_comb, cri, post_eval) {
+
   if (!is.null(rope)) {
     # decision rule
     sign <- get_sign(lin_comb)
     excludes_rope <- excludes_rope(cri, rope, sign)
-    rope_overlap <- sum(rope[[1]] < post_eval & post_eval < rope[[2]]) / length(post_eval)
+    rope_overlap <- mean(rope[[1]] < post_eval & post_eval < rope[[2]])
 
     if (sign != "=") {
       support <- ifelse(excludes_rope,
@@ -175,3 +178,227 @@ make_ei_hyp <- function(node, data) {
   }
   return(hypothesis)
 }
+
+
+############################
+# ---- BGGM method ----
+############################
+
+# Hypothesis method for bbcor objects
+lin_comb.BGGM <- function(lin_comb,
+                          obj,
+                          cri_level = 0.90,
+                          rope = NULL) {
+
+  if(!requireNamespace("BGGM", quietly = TRUE)) {
+    stop("Please install the '", "BGGM", "' package.")
+  }
+
+  # Extract variable names
+  all_vars <- extract_var_names(obj)
+
+  comb <- clean_comb(lin_comb)
+
+  # extract all correlations in hyp
+  comb_vars_list <- get_matches("[[:alnum:]]+--[[:alnum:]]+", comb)
+  comb_vars <- unlist(comb_vars_list)
+
+  # add backticks for evaluation of hypotheses
+  comb_eval <- comb
+  for (cv in unique(comb_vars)) {
+    comb_eval <- gsub(pattern = cv,
+                      replacement = paste0("`", cv, "`"),
+                      x = comb_eval)
+  }
+
+  # check all parameters in hypothesis are valid
+  miss_pars <- setdiff(comb_vars, all_vars)
+  if (length(miss_pars)) {
+    miss_pars <- paste(miss_pars, collapse = ",")
+    stop(paste("Some variables not found in 'obj' \n", miss_pars))
+  }
+
+  post_samps <- get_corr_samples(obj, all_vars)
+
+  # evaluate combinations in posterior samples
+  comb_expr <- str2expression(comb_eval)
+  post_eval <- eval(comb_expr, post_samps)
+  post_eval_z <- BGGM::fisher_r_to_z(post_eval)
+
+  # bounds for credible interval
+  a <- (1 - cri_level) / 2
+  cri_bounds <- c(a, 1 - a)
+
+  cri_z <- quantile(post_eval_z, cri_bounds)
+  cri <- quantile(post_eval, cri_bounds)
+
+  post_mean <- mean(post_eval)
+  post_sd <- sd(post_eval)
+  prob_greater <- mean(post_eval > 0)
+
+  rope_info <- rope_helper(rope, lin_comb, cri, post_eval)
+
+  out <- list(lin_comb = lin_comb,
+              rope = rope,
+              rope_overlap = rope_info$rope_overlap,
+              samples = list(pcors = post_eval,
+                             fisher_z = post_eval_z),
+              cri = cri,
+              cri_z = cri_z,
+              mean_samples = post_mean,
+              sd_samples = post_sd,
+              prob_greater = prob_greater,
+              support = rope_info$support,
+              cri_level = cri_level,
+              call = match.call())
+
+  class(out) <- "bayeslincom"
+  return(out)
+}
+
+#########################
+# ---- BBcor method ----
+#########################
+
+# Hypothesis method for bbcor objects
+lin_comb.bbcor <- function(lin_comb,
+                           obj,
+                           cri_level = 0.90,
+                           rope = NULL) {
+
+  if(!requireNamespace("BBcor", quietly = TRUE)) {
+    stop("Please install the '", "BGGM", "' package.")
+  }
+
+  all_vars <- extract_var_names(obj)
+
+  comb <- clean_comb(lin_comb)
+
+  # extract all correlations in hyp
+  comb_vars_list <- get_matches("[[:alnum:]]+--[[:alnum:]]+", comb)
+  comb_vars <- unlist(comb_vars_list)
+
+  # add backticks for evaluation of hypotheses
+  comb_eval <- comb
+  for (cv in unique(comb_vars)) {
+    comb_eval <- gsub(pattern = cv,
+                      replacement = paste0("`", cv, "`"),
+                      x = comb_eval)
+  }
+
+  # check all parameters in hypothesis are valid
+  miss_pars <- setdiff(comb_vars, all_vars)
+  if (length(miss_pars)) {
+    miss_pars <- paste(miss_pars, collapse = ",")
+    stop(paste("Some variables not found in 'obj' \n", miss_pars))
+  }
+
+  post_samps <- get_corr_samples(obj, all_vars)
+
+  # evaluate combinations in post/prior
+  comb_expr <- str2expression(comb_eval)
+  post_eval <- eval(comb_expr, post_samps)
+
+  # bounds for credible interval
+  a <- (1 - cri_level) / 2
+  cri_bounds <- c(a, 1 - a)
+
+  cri <- quantile(post_eval, cri_bounds)
+
+  post_mean <- mean(post_eval)
+  post_sd <- sd(post_eval)
+  prob_greater <- mean(post_eval > 0)
+
+  rope_info <- rope_helper(rope, lin_comb, cri, post_eval)
+
+  out <- list(lin_comb = lin_comb,
+              rope = rope,
+              rope_overlap = rope_info$rope_overlap,
+              samples = post_eval,
+              cri = cri,
+              mean_samples = post_mean,
+              sd_samples = post_sd,
+              prob_greater = prob_greater,
+              support = rope_info$support,
+              cri_level = cri_level,
+              call = match.call())
+
+  class(out) <- "bayeslincom"
+  return(out)
+}
+
+############################
+# ---- data.frame method ----
+############################
+
+# Hypothesis method for data.frame objects
+lin_comb.data.frame <- function(lin_comb,
+                                obj,
+                                cri_level = 0.90,
+                                rope = NULL) {
+  all_vars <- extract_var_names(obj)
+
+  comb <- clean_comb(lin_comb)
+
+  # extract all correlations in hyp
+  comb_vars <- find_vars(comb)
+
+  # add backticks for evaluation of hypotheses
+  comb_eval <- comb
+  for (cv in unique(comb_vars)) {
+    comb_eval <- gsub(pattern = cv,
+                      replacement = paste0("`", cv, "`"),
+                      x = comb_eval)
+  }
+
+  # check all parameters in hypothesis are valid
+  miss_pars <- setdiff(comb_vars, all_vars)
+  if (length(miss_pars)) {
+    miss_pars <- paste(miss_pars, collapse = ",")
+    stop(paste("Some variables not found in 'obj' \n", miss_pars))
+  }
+
+  # evaluate combinations in post/prior
+  comb_expr <- str2expression(comb_eval)
+  post_eval <- eval(comb_expr, as.data.frame(obj))
+
+  # bounds for credible interval
+  a <- (1 - cri_level) / 2
+  cri_bounds <- c(a, 1 - a)
+
+  cri <- quantile(post_eval, cri_bounds)
+
+  post_mean <- mean(post_eval)
+  post_sd <- sd(post_eval)
+  prob_greater <- mean(post_eval > 0)
+
+  rope_info <- rope_helper(rope, lin_comb, cri, post_eval)
+
+  out <- list(lin_comb = lin_comb,
+              rope = rope,
+              rope_overlap = rope_info$rope_overlap,
+              samples = post_eval,
+              cri = cri,
+              mean_samples = post_mean,
+              sd_samples = post_sd,
+              prob_greater = prob_greater,
+              support = rope_info$support,
+              cri_level = cri_level,
+              call = match.call())
+
+  class(out) <- "bayeslincom"
+  return(out)
+}
+
+check_lin_comb <- function(lin_comb){
+
+  if (length(lin_comb) != 1L) {
+    stop("argument 'lin_comb' must have length of 1")
+  }
+  if (!is.character(lin_comb)) {
+    stop("argument 'lin_comb' must be of type 'character'")
+  }
+}
+
+
+globalVariables("samples")
