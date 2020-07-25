@@ -38,6 +38,64 @@ library(bayeslincom)
 
 ## Example: **BBcor**
 
+The **BBcor** package provides Bayesian bootstrapped correlations and
+partial correlations. In the following, the test is whether one
+correlation is larger than the sum of two correlations. This is
+implemented with
+
+``` r
+library(BBcor)
+
+# data
+Y <- mtcars[,c("mpg", "wt", "hp")]
+
+# fit model
+fit <- bbcor(Y, method = "spearman")
+
+# print
+
+#>           mpg         wt         hp
+#> mpg  1.0000000 -0.8842590 -0.8946683
+#> wt  -0.8842590  1.0000000  0.7754185
+#> hp  -0.8946683  0.7754185  1.0000000
+```
+
+Next the hypothesis is written out. In this case
+
+``` r
+hyp <- "-1*mpg--wt - (-1*mpg--wt + 1*wt--hp) = 0"
+```
+
+Note that each relation is multiplied by the sign. This ensures the
+magnitude is being compared. Next the hypothesis is tested as follows
+
+``` r
+lin_comb(hyp, 
+         obj = fit, 
+         cri_level = 0.95)
+
+
+#>  bayeslincom: linear combinations of posterior samples
+#>  ------ 
+#>  Call:
+#>  lin_comb.bbcor(lin_comb = lin_comb, obj = obj, cri_level = cri_level, 
+#>      rope = rope)
+#>  ------ 
+#>  combination: -1*mpg--wt - (-1*mpg--wt + wt--hp) = 0 
+#>  ------ 
+#>  Posterior Summary:
+#>  
+#>   Post.mean Post.sd Cred.lb Cred.ub Pr.less Pr.greater
+#>       -0.78    0.07   -0.89   -0.61       1          0
+#>  ------ 
+#>  note:
+#>  Pr.less: Posterior probability less than zero
+#>  Pr.greater: Posterior probability less than zero
+```
+
+In this case, the relations, `mpg--wt` and `wt-hp`, are larger than the
+relation `mpg--wt`, with a posterior probability of 1.
+
 ## Example: Data Frame
 
 ### **MCMCpack**
