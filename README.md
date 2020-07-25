@@ -80,7 +80,7 @@ fit_bayes
 #> Posterior Summary:
 #> 
 #> Post.mean Post.sd Cred.lb Cred.ub Pr.less Pr.greater
-#>      2.53    2.06   -1.53    6.58    0.11       0.89
+#>      2.64    2.04   -1.38    6.65    0.09       0.91
 #> ------ 
 #> note:
 #> Pr.less: Posterior probability less than zero
