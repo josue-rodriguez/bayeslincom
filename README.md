@@ -13,11 +13,13 @@
 
 <!-- You can install the released version of bayeslincom from [CRAN](https://CRAN.R-project.org) with: -->
 
-``` r
-install.packages("bayeslincom")
-```
+<!-- ``` r -->
 
-And the development version from [GitHub](https://github.com/) with:
+<!-- install.packages("bayeslincom") -->
+
+<!-- ``` -->
+
+The development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
