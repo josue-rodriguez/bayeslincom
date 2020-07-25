@@ -18,11 +18,11 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of bayeslincom is to ...
+<!-- The goal of bayeslincom is to ... -->
 
 ## Installation
 
-You can install the released version of bayeslincom from [CRAN](https://CRAN.R-project.org) with:
+<!-- You can install the released version of bayeslincom from [CRAN](https://CRAN.R-project.org) with: -->
 
 ``` r
 install.packages("bayeslincom")
@@ -34,34 +34,25 @@ And the development version from [GitHub](https://github.com/) with:
 # install.packages("devtools")
 devtools::install_github("josue-rodriguez/bayeslincom")
 ```
-## Example: BGGM
+## Example: **BGGM**
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to solve a common problem in the `R` package
+**BGGM**:
 
 ```{r example}
 library(bayeslincom)
 ## basic example code
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
+## Example: **BBcor**
 
 
 ## Example: Data Frame
-### MCMCpack
-There are a variety of `R` packages that provide samples from the posterior distribution. By placing 
-the respective samples into a `data.frame`, the **bayeslincom** can be used to test linear combinations. Here is an example using **MCMCpack**.
+### **MCMCpack**
+There are a variety of `R` packages that provide samples from the 
+posterior distribution. By placing the respective samples into 
+a `data.frame`, the **bayeslincom** can be used to test linear combinations. 
+Here is an example using **MCMCpack**.
 
 ```r
 library(MCMCpack)
