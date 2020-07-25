@@ -53,6 +53,7 @@ Y <- mtcars[,c("mpg", "wt", "hp")]
 fit <- bbcor(Y, method = "spearman")
 
 # print
+fit
 
 #>           mpg         wt         hp
 #> mpg  1.0000000 -0.8842590 -0.8946683
