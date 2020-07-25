@@ -6,8 +6,7 @@
 #' @param hist_col Color for histogram edges
 #' @param hist_fill Color for histogram bars
 #' @param bar_col Color of bar for credible interval
-#' @param ... Currently ignored
-#' @return An object of class \code{ggplot}
+#' @return A plot
 #' @examples
 #'Y <- BGGM::ptsd
 #'colnames(Y) <- letters[1:20]
@@ -20,12 +19,9 @@
 #' @importFrom  ggplot2 ggplot aes geom_histogram geom_point geom_segment geom_vline
 #' @export plot.bayeslincom
 #' @export
-plot.bayeslincom <- function(x,
-                             bins = 30,
-                             point_col = "black",
-                             hist_col = "black",
-                             hist_fill = "gray",
-                             bar_col = "steelblue", ...) {
+plot.bayeslincom <- function(x, bins = 30,
+                             point_col = "black", hist_col = "black",
+                             hist_fill = "gray", bar_col = "steelblue") {
   if (is(x$samples, "list")) {
     plot_data <- data.frame(samples = x$samples$pcors)
   } else {

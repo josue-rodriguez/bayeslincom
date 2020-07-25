@@ -12,9 +12,7 @@ Encoding: UTF-8
 LazyData: true
 Imports:
   ggplot2,
-  methods,
-  stats
-Suggests:
-  BBcor,
   BGGM
+Suggests:
+  BBcor
 RoxygenNote: 7.1.1

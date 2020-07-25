@@ -4,4 +4,3 @@
 ^bayes_bootstrap\.R$
 ^lin_comb2\.R$
 ^README\.Rmd$
-^\.travis\.yml$

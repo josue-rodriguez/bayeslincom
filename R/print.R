@@ -9,14 +9,13 @@ print.bayeslincom <- function(x, ...) {
     cri <- round(x$cri, 2)
 
     print_df <- data.frame(
-      Post.mean = round(x$mean_samples, 2),
-      Post.sd = round(x$sd_samples, 2),
-      Cred.lb = cri[[1]],
-      Cred.ub = cri[[2]]
+      mean = round(x$mean_samples, 2),
+      sd = round(x$sd_samples, 2),
+      cri_lb = cri[[1]],
+      cri_ub = cri[[2]]
     )
 
     cat("bayeslincom: linear combinations of posterior samples\n")
-    cat("------ \n")
     cat("Call:\n")
     print(x$call)
 
@@ -26,22 +25,17 @@ print.bayeslincom <- function(x, ...) {
 
     if (!is.null(x$rope)) {
       cat("rope: [", x$rope[[1]], ",", x$rope[[2]], "] \n")
-      print_df$Pr.in <- x$rope_overlap
 
-      # note for ROPE
-      note <- "Pr.in: Posterior probability in ROPE"
-    } else {
-      print_df$Pr.less <- round(1 - x$prob_greater, 2)
-      print_df$Pr.greater <- round(x$prob_greater, 2)
-
-      note <- paste0("Pr.less: Posterior probability less than zero\n",
-                     "Pr.greater: Posterior probability less than zero")
+      print_df$overlap <- x$rope_overlap
     }
 
     cat("------ \n")
 
-    cat("Posterior Summary:\n\n")
+    cat("summary of posterior:\n")
     print(print_df, row.names = FALSE, right = T)
+
+    if (!is.null(x$support)) {
     cat("------ \n")
-    cat(paste0("note:\n", note))
+    cat(x$support)
     }
+}
