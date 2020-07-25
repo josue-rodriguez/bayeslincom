@@ -44,8 +44,8 @@ library(bayeslincom)
 
 There are a variety of `R` packages that provide samples from the
 posterior distribution. By placing the respective samples into a
-`data.frame`, the **bayeslincom** can be used to test linear
-combinations. Here is an example using **MCMCpack**.
+`data.frame`, **bayeslincom** can be used to test linear combinations.
+Here is an example using **MCMCpack**.
 
 ``` r
 library(MCMCpack)
