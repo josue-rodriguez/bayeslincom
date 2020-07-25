@@ -78,7 +78,7 @@ fit_bayes <- MCMCpack::MCMCregress(mpg ~ vs + hp,
 # data frame
 samps <- as.data.frame(fit_bayes)
                                    
-
+# test hypothesis
 test <- lin_comb(lin_comb = "vs - hp = 0", 
                  obj  = samps, 
                  cri_level = 0.95)                                 
@@ -121,7 +121,6 @@ confint(
   multcomp::glht(fit_lm, linfct = "vs - hp == 0"), 
   level = 0.95
   )
-
 
 #>   Simultaneous Confidence Intervals
 #> 
