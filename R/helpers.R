@@ -1,9 +1,12 @@
-rope_helper <- function(rope, lin_comb, cri, post_eval) {
+#' @importFrom stats quantile sd
+
+ rope_helper <- function(rope, lin_comb, cri, post_eval) {
+
   if (!is.null(rope)) {
     # decision rule
     sign <- get_sign(lin_comb)
     excludes_rope <- excludes_rope(cri, rope, sign)
-    rope_overlap <- sum(rope[[1]] < post_eval & post_eval < rope[[2]]) / length(post_eval)
+    rope_overlap <- mean(rope[[1]] < post_eval & post_eval < rope[[2]])
 
     if (sign != "=") {
       support <- ifelse(excludes_rope,
@@ -175,7 +178,6 @@ make_ei_hyp <- function(node, data) {
   }
   return(hypothesis)
 }
-
 
 
 ############################
@@ -400,4 +402,3 @@ check_lin_comb <- function(lin_comb){
 
 
 globalVariables("samples")
-

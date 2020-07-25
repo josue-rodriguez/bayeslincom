@@ -10,7 +10,8 @@
   point_col = "black",
   hist_col = "black",
   hist_fill = "gray",
-  bar_col = "steelblue"
+  bar_col = "steelblue",
+  ...
 )
 }
 \arguments{
@@ -25,9 +26,11 @@
 \item{hist_fill}{Color for histogram bars}
 
 \item{bar_col}{Color of bar for credible interval}
+
+\item{...}{Currently ignored}
 }
 \value{
-A plot
+An object of class \code{ggplot}
 }
 \description{
 Perform a linear combination of posterior samples
