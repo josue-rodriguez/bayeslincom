@@ -146,7 +146,7 @@ fit_bayes
 #> ------ 
 #> note:
 #> Pr.less: Posterior probability less than zero
-#> Pr.greater: Posterior probability less than zero
+#> Pr.greater: Posterior probability greater than zero
 ```
 
 Note that the hypothesis could also be written as `vs = hp`.
