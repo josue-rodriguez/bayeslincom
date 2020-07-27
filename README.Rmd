@@ -100,6 +100,10 @@ lin_comb(hyp,
 
 In this case, the sum of the relations, `mpg--hp` and `wt-hp`, are larger than the relation `mpg--wt`, with a posterior probability of 1. 
 
+This example also demonstrates a key contribution of **bayeslincom**, i.e., testing linear combinations among
+dependent correlations. This is the only Bayesian (and possibly in general) implementation in `R`.
+
+
 ## Example: Data Frame
 ### **MCMCpack**
 There are a variety of `R` packages that provide samples from the 
