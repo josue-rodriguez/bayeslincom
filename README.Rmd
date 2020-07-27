@@ -16,6 +16,9 @@ knitr::opts_chunk$set(
 # bayeslincom
 
 <!-- badges: start -->
+![lifecycle](man/figures/lifecycle-experimental.svg)
+[![Build Status](https://travis-ci.org/josue-rodriguez/bayeslincom.svg?branch=master)](https://travis-ci.org/josue-rodriguez/bayeslincom)
+
 <!-- badges: end -->
 
 <!-- The goal of bayeslincom is to ... -->
@@ -39,9 +42,9 @@ devtools::install_github("josue-rodriguez/bayeslincom")
 This is a basic example which shows you how to solve a common problem in the `R` package
 **BGGM**:
 
-```{r example}
+```r
 library(bayeslincom)
-## basic example code
+library(BGGM)
 ```
 
 ## Example: **BBcor**

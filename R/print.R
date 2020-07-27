@@ -15,17 +15,17 @@ print.bayeslincom <- function(x, ...) {
       Cred.ub = cri[[2]]
     )
 
-    cat("bayeslincom: linear combinations of posterior samples\n")
+    cat("bayeslincom: Linear Combinations of Posterior Samples\n")
     cat("------ \n")
     cat("Call:\n")
     print(x$call)
 
     cat("------ \n")
 
-    cat("combination:", x$lin_comb, "\n")
+    cat("Combination:", x$lin_comb, "\n")
 
     if (!is.null(x$rope)) {
-      cat("rope: [", x$rope[[1]], ",", x$rope[[2]], "] \n")
+      cat("ROPE: [", x$rope[[1]], ",", x$rope[[2]], "] \n")
       print_df$Pr.in <- x$rope_overlap
 
       # note for ROPE
@@ -43,5 +43,5 @@ print.bayeslincom <- function(x, ...) {
     cat("Posterior Summary:\n\n")
     print(print_df, row.names = FALSE, right = T)
     cat("------ \n")
-    cat(paste0("note:\n", note))
+    cat(paste0("Note:\n", note))
     }

@@ -21,11 +21,12 @@
 #' @export plot.bayeslincom
 #' @export
 plot.bayeslincom <- function(x,
-                             bins = 30,
                              point_col = "black",
                              hist_col = "black",
                              hist_fill = "gray",
-                             bar_col = "steelblue", ...) {
+                             bar_col = "steelblue",
+                             bins = 30,
+                             ...) {
   if (is(x$samples, "list")) {
     plot_data <- data.frame(samples = x$samples$pcors)
   } else {
