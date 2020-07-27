@@ -6,3 +6,5 @@ warnings_are_errors: false
 
 os:
   - linux
+
+r_github_packages: donaldRwilliams/BBcor
