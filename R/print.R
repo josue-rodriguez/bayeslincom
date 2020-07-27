@@ -35,7 +35,7 @@ print.bayeslincom <- function(x, ...) {
       print_df$Pr.greater <- round(x$prob_greater, 2)
 
       note <- paste0("Pr.less: Posterior probability less than zero\n",
-                     "Pr.greater: Posterior probability less than zero")
+                     "Pr.greater: Posterior probability greater than zero")
     }
 
     cat("------ \n")
