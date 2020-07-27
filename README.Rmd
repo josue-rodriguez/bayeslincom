@@ -95,7 +95,7 @@ lin_comb(hyp,
 #> ------ 
 #> note:
 #> Pr.less: Posterior probability less than zero
-#> Pr.greater: Posterior probability less than zero
+#> Pr.greater: Posterior probability greater than zero
 ```
 
 In this case, the sum of the relations, `mpg--hp` and `wt-hp`, are larger than the relation `mpg--wt`, with a posterior probability of 1. 
