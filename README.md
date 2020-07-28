@@ -3,9 +3,9 @@
 
 # bayeslincom
 
-
 <!-- badges: start -->
-[![Build
+
+![lifecycle](man/figures/lifecycle-experimental.svg) [![Build
 Status](https://travis-ci.org/josue-rodriguez/bayeslincom.svg?branch=master)](https://travis-ci.org/josue-rodriguez/bayeslincom)
 <!-- badges: end -->
 
