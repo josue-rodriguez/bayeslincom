@@ -6,18 +6,17 @@
 \usage{
 \method{plot}{bayeslincom}(
   x,
-  bins = 30,
   point_col = "black",
   hist_col = "black",
   hist_fill = "gray",
   bar_col = "steelblue",
+  bins = 30,
+  display_comb_strings = TRUE,
   ...
 )
 }
 \arguments{
 \item{x}{An object of class \code{bayeslincom}}
-
-\item{bins}{Number of bins}
 
 \item{point_col}{Color for point indicating mean of posterior}
 
@@ -26,6 +25,12 @@
 \item{hist_fill}{Color for histogram bars}
 
 \item{bar_col}{Color of bar for credible interval}
+
+\item{bins}{Number of bins}
+
+\item{display_comb_strings}{If \code{TRUE}, displays full strings for
+combinations in \code{ggplot} facets  when there
+is more than one combination in \code{x}}
 
 \item{...}{Currently ignored}
 }

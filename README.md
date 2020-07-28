@@ -3,6 +3,8 @@
 
 # bayeslincom
 
+
+<!-- badges: start -->
 [![Build
 Status](https://travis-ci.org/josue-rodriguez/bayeslincom.svg?branch=master)](https://travis-ci.org/josue-rodriguez/bayeslincom)
 <!-- badges: end -->
@@ -26,14 +28,11 @@ The development version from [GitHub](https://github.com/) with:
 devtools::install_github("josue-rodriguez/bayeslincom")
 ```
 
-## Example: **BGGM**
-
-This is a basic example which shows you how to solve a common problem in
-the `R` package **BGGM**:
+Some basic examples for solving a common problems with the `R` package
+**bayeslincom**:
 
 ``` r
 library(bayeslincom)
-## basic example code
 ```
 
 ## Example: **BBcor**
@@ -47,7 +46,7 @@ implemented with
 library(BBcor)
 
 # data
-Y <- mtcars[,c("mpg", "wt", "hp")]
+Y <- mtcars[, c("mpg", "wt", "hp")]
 
 # fit model
 fit <- bbcor(Y, method = "spearman")
