@@ -405,8 +405,3 @@ extract_list_items <- function(x, item, as_df = FALSE) {
   if (as_df) out <- as.data.frame(out)
   return(out)
 }
-
-globalVariables("samples")
-globalVariables("comb")
-globalVariables("bounds.lb")
-globalVariables("bounds.ub")

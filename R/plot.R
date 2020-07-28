@@ -20,7 +20,7 @@
 #'                     cri_level = 0.90,
 #'                     rope = c(-0.1, 0.1))
 #'plot(bggm_comb)
-#' @importFrom  ggplot2 ggplot aes geom_histogram geom_point geom_segment
+#' @importFrom  ggplot2 ggplot aes_string geom_histogram geom_point geom_segment
 #'                      geom_vline facet_wrap
 #' @importFrom stats reshape
 #' @export plot.bayeslincom
@@ -91,20 +91,26 @@ plot.bayeslincom <- function(x,
     ggplot() +
     geom_histogram(
       data = sample_data,
-      aes(x = samples),
+      aes_string(x = "samples"),
       col = hist_col,
       fill = hist_fill,
       bins = bins
     ) +
     geom_segment(
       data = plot_data,
-      aes(x = bounds.lb, xend = bounds.ub, y = 0, yend = 0, group = comb),
+      aes_string(x = "bounds.lb",
+                 xend = "bounds.ub",
+                 y = 0,
+                 yend = 0,
+                 group = "comb"),
       size = 4,
       col = bar_col
     ) +
     geom_point(
       data = plot_data,
-      aes(x = mean, y = 0, group = comb),
+      aes_string(x = "mean",
+                 y = 0,
+                 group = "comb"),
       col = point_col,
       size = 4
     )
@@ -116,9 +122,7 @@ plot.bayeslincom <- function(x,
   }
 
   if (length(res) > 1) {
-      p <- p + facet_wrap(~ comb,
-                          scales = "free")
+      p <- p + facet_wrap(~ comb, scales = "free")
   }
-
   return(p)
 }

@@ -7,7 +7,7 @@ Maintainer: Josue E. Rodriguez <josue.rodriguez594@gmail.com>
 Description: Computes point estimates, standard deviations, and credible intervals for 
              linear combinations of posterior samples.
 Depends: R (>= 4.0.0)
-License: GPL-2
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
