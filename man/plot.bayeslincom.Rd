@@ -11,6 +11,7 @@
   hist_fill = "gray",
   bar_col = "steelblue",
   bins = 30,
+  display_comb_strings = TRUE,
   ...
 )
 }
@@ -26,6 +27,10 @@
 \item{bar_col}{Color of bar for credible interval}
 
 \item{bins}{Number of bins}
+
+\item{display_comb_strings}{If \code{TRUE}, displays full strings for
+combinations in \code{ggplot} facets  when there
+is more than one combination in \code{x}}
 
 \item{...}{Currently ignored}
 }

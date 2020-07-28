@@ -399,4 +399,14 @@ get_matches <- function(pattern, text) {
   return(x)
 }
 
+# ---- Extract and reshape data ----
+extract_list_items <- function(x, item, as_df = FALSE) {
+  out <- sapply(x, "[[", item)
+  if (as_df) out <- as.data.frame(out)
+  return(out)
+}
+
 globalVariables("samples")
+globalVariables("comb")
+globalVariables("bounds.lb")
+globalVariables("bounds.ub")
