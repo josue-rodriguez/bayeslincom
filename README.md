@@ -3,11 +3,10 @@
 
 # bayeslincom
 
+
 <!-- badges: start -->
-
-![lifecycle](man/figures/lifecycle-experimental.svg) [![Build
+[![Build
 Status](https://travis-ci.org/josue-rodriguez/bayeslincom.svg?branch=master)](https://travis-ci.org/josue-rodriguez/bayeslincom)
-
 <!-- badges: end -->
 
 <!-- The goal of bayeslincom is to ... -->
