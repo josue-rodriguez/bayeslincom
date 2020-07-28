@@ -6,14 +6,23 @@
 #' @export print.bayeslincom
 #' @export
 print.bayeslincom <- function(x, ...) {
-    cri <- round(x$cri, 2)
+    cri_raw <- sapply(x$results, "[[", "cri", USE.NAMES = TRUE)
+    cri <- round(cri_raw, 2)
+
+    Post.mean_raw <- sapply(x$results, "[[", "mean_samples")
+    Post.mean <- round(Post.mean_raw, 2)
+
+    Post.sd_raw <- sapply(x$results, "[[", "sd_samples")
+    Post.sd <- round(Post.mean_raw, 2)
 
     print_df <- data.frame(
-      Post.mean = round(x$mean_samples, 2),
-      Post.sd = round(x$sd_samples, 2),
-      Cred.lb = cri[[1]],
-      Cred.ub = cri[[2]]
+      Post.mean = Post.mean,
+      Post.sd = Post.sd,
+      Cred.lb = cri[1, ],
+      Cred.ub = cri[2, ]
     )
+    row.names(print_df) <- names(x$results)
+
 
     cat("bayeslincom: Linear Combinations of Posterior Samples\n")
     cat("------ \n")
@@ -22,26 +31,32 @@ print.bayeslincom <- function(x, ...) {
 
     cat("------ \n")
 
-    cat("Combination:", x$lin_comb, "\n")
+    cat("Combinations:\n")
+    comb_list <- lapply(x$results, "[[", "lin_comb")
+
+    for (comb in seq_along(comb_list)) {
+      cat(paste0(" C", comb, ":"), comb_list[[comb]], "\n")
+    }
+    cat("------ \n")
+
+    cat("Posterior Summary:\n\n")
 
     if (!is.null(x$rope)) {
-      cat("ROPE: [", x$rope[[1]], ",", x$rope[[2]], "] \n")
-      print_df$Pr.in <- x$rope_overlap
+      cat("ROPE: [", x$rope[[1]], ",", x$rope[[2]], "] \n\n")
+      print_df$Pr.in <- sapply(x$results, "[[", "rope_overlap")
 
       # note for ROPE
       note <- "Pr.in: Posterior probability in ROPE"
     } else {
-      print_df$Pr.less <- round(1 - x$prob_greater, 2)
-      print_df$Pr.greater<- round(x$prob_greater, 2)
+      prob_greater <- sapply(x$results, "[[", "prob_greater")
+      print_df$Pr.less <- round(1 - prob_greater, 2)
+      print_df$Pr.greater<- round(prob_greater, 2)
 
       note <- paste0("Pr.less: Posterior probability less than zero\n",
                      "Pr.greater: Posterior probability greater than zero")
     }
 
-    cat("------ \n")
-
-    cat("Posterior Summary:\n\n")
-    print(print_df, row.names = FALSE, right = T)
+    print(print_df, right = T)
     cat("------ \n")
     cat(paste0("Note:\n", note))
     }

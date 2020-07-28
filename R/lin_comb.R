@@ -17,10 +17,6 @@
 #' # names
 #' colnames(Y) <- letters[1:20]
 #'
-#' ###########################
-#' ######### BGGM ############
-#' ###########################
-#'
 #' # estimate model
 #' est <- BGGM::estimate(Y)
 #'
@@ -38,8 +34,6 @@ lin_comb <- function(lin_comb,
                      obj,
                      cri_level = 0.90,
                      rope = NULL) {
-
-  check <- check_lin_comb(lin_comb)
 
   if (methods::is(obj, "data.frame")) {
     out <- lin_comb.data.frame(lin_comb, obj, cri_level, rope)

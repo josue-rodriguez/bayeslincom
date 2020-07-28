@@ -28,10 +28,6 @@ Y <- BGGM::ptsd
 # names
 colnames(Y) <- letters[1:20]
 
-###########################
-######### BGGM ############
-###########################
-
 # estimate model
 est <- BGGM::estimate(Y)
 
