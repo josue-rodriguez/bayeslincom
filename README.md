@@ -9,7 +9,9 @@
 Status](https://travis-ci.org/josue-rodriguez/bayeslincom.svg?branch=master)](https://travis-ci.org/josue-rodriguez/bayeslincom)
 <!-- badges: end -->
 
-<!-- The goal of bayeslincom is to ... -->
+The goal of `bayeslincom` is to provide point estimates, standard
+deviations, and credible intervals for linear combinations of posterior
+samples. Additionally, it allows for ROPE tests
 
 ## Installation
 
@@ -31,16 +33,12 @@ devtools::install_github("josue-rodriguez/bayeslincom")
 Some basic examples for solving a common problems with the `R` package
 **bayeslincom**:
 
-``` r
-library(bayeslincom)
-```
-
 ## Example: **BBcor**
 
 The **BBcor** package provides Bayesian bootstrapped correlations and
 partial correlations. In the following, the test is whether one
-correlation is larger than the sum of two correlations. This is
-implemented with
+correlation is larger than the sum of two correlations. The correlations
+can be estimated with
 
 ``` r
 library(BBcor)
@@ -67,32 +65,36 @@ hyp <- "-1*mpg--wt - (-1*mpg--hp + wt--hp) = 0"
 ```
 
 Note that each relation is multiplied by the sign. This ensures the
-magnitude is being compared. Next the hypothesis is tested as follows
+magnitude is being compared. Next the hypothesis is tested using the
+`lin_comb` function
 
 ``` r
+library(bayeslincom)
+
 lin_comb(hyp, 
          obj = fit, 
          cri_level = 0.95)
 
-#> bayeslincom: linear combinations of posterior samples
+#> bayeslincom: Linear Combinations of Posterior Samples
 #> ------ 
 #> Call:
 #> lin_comb.bbcor(lin_comb = lin_comb, obj = obj, cri_level = cri_level, 
 #>     rope = rope)
 #> ------ 
-#> combination: -1*mpg--wt - (-1*mpg--hp + wt--hp) = 0 
+#> Combinations:
+#>  C1: -1*mpg--wt - (-1*mpg--hp + wt--hp) = 0 
 #> ------ 
 #> Posterior Summary:
-#> 
-#>  Post.mean Post.sd Cred.lb Cred.ub Pr.less Pr.greater
-#>      -0.78    0.09   -0.93   -0.59       1          0
+#>
+#>    Post.mean Post.sd Cred.lb Cred.ub Pr.less Pr.greater
+#> C1     -0.78   -0.78   -0.92   -0.59       1          0
 #> ------ 
-#> note:
+#> Note:
 #> Pr.less: Posterior probability less than zero
 #> Pr.greater: Posterior probability greater than zero
 ```
 
-In this case, the sum of the relations, `mpg--hp` and `wt-hp`, are
+In this case, the sum of the relations, `mpg--hp` and `wt--hp`, are
 larger than the relation `mpg--wt`, with a posterior probability of 1.
 
 This example also demonstrates a key contribution of **bayeslincom**,
@@ -130,25 +132,78 @@ test <- lin_comb(lin_comb = "vs - hp = 0",
 # print results
 fit_bayes
 
-#> bayeslincom: linear combinations of posterior samples
+#> bayeslincom: Linear Combinations of Posterior Samples
 #> ------ 
 #> Call:
 #> lin_comb.data.frame(lin_comb = lin_comb, obj = obj, cri_level = cri_level, 
-#>    rope = rope)
+#>     rope = rope)
 #> ------ 
-#> combination: vs + hp = 0 
+#> Combinations:
+#>  C1: vs - hp = 0 
 #> ------ 
 #> Posterior Summary:
-#> 
-#> Post.mean Post.sd Cred.lb Cred.ub Pr.less Pr.greater
-#>      2.64    2.04   -1.38    6.65    0.09       0.91
+#>
+#>    Post.mean Post.sd Cred.lb Cred.ub Pr.less Pr.greater
+#> C1      2.64    2.64   -1.38    6.65    0.09       0.91
 #> ------ 
-#> note:
+#> Note:
 #> Pr.less: Posterior probability less than zero
 #> Pr.greater: Posterior probability greater than zero
 ```
 
 Note that the hypothesis could also be written as `vs = hp`.
+
+## Example: **Multiple Combinations**
+
+``` r
+library(BGGM)
+
+# data (+ 1)
+Y <- ptsd[, 1:7] + 1
+head(Y)
+
+# BGGM estimate
+est <- estimate(Y, type = "ordinal")
+
+# example hypotheses
+hyps <- c("(B4--C1 + B4--C2) > (B2--C1 + B2--C2)",
+          "(B2--C1 + B2--C2) > (B1--C1 + B1--C2)")
+         
+# test
+test <- lin_comb(hyps,
+                 est,
+                 cri_level = 0.95)
+test
+
+#> bayeslincom: Linear Combinations of Posterior Samples
+#> ------ 
+#> Call:
+#> lin_comb.BGGM(lin_comb = lin_comb, obj = obj, cri_level = cri_level, 
+#>     rope = rope)
+#> ------ 
+#> Combinations:
+#>  C1: (B4--C1 + B4--C2) > (B2--C1 + B2--C2) 
+#>  C2: (B2--C1 + B2--C2) > (B1--C1 + B1--C2) 
+#> ------ 
+#> Posterior Summary:
+#> 
+#>    Post.mean Post.sd Cred.lb Cred.ub Pr.less Pr.greater
+#> C1      0.10    0.10   -0.16    0.34    0.23       0.77
+#> C2      0.21    0.21   -0.10    0.52    0.09       0.91
+#> ------ 
+#> Note:
+#> Pr.less: Posterior probability less than zero
+#> Pr.greater: Posterior probability greater than zero
+```
+
+``` r
+plot(rope_test, bins = 50) +
+  ggplot2::theme_bw()
+```
+
+<img src="READMEplots/mult-comps.svg" width="90%" height="90%" style="display: block; margin: auto;" />
+
+## Example: **ROPE**
 
 #### Comparison to **multcomp**
 
@@ -182,5 +237,5 @@ confint(
 
 Although the results are nearly identical, note that **bayeslincom** (1)
 provides the posterior probability of a positive and negative
-difference; and (2) is compatible with essentially all `R` packages for
+difference; and (2) is compatible with essentially all `R`packages for
 Bayesian analysis.
