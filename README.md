@@ -117,12 +117,12 @@ library(MCMCpack)
 Y <- mtcars
 
 # fit model
-fit_bayes <- MCMCpack::MCMCregress(mpg ~ vs + hp, 
+fit_mcmc <- MCMCpack::MCMCregress(mpg ~ vs + hp, 
                                    data = Y, 
                                    mcmc = 100000)
                                    
 # data frame
-samps <- as.data.frame(fit_bayes)
+samps <- as.data.frame(fit_mcmc)
                                    
 # test hypothesis
 test <- lin_comb(lin_comb = "vs - hp = 0", 
@@ -152,58 +152,6 @@ fit_bayes
 ```
 
 Note that the hypothesis could also be written as `vs = hp`.
-
-## Example: **Multiple Combinations**
-
-``` r
-library(BGGM)
-
-# data (+ 1)
-Y <- ptsd[, 1:7] + 1
-head(Y)
-
-# BGGM estimate
-est <- estimate(Y, type = "ordinal")
-
-# example hypotheses
-hyps <- c("(B4--C1 + B4--C2) > (B2--C1 + B2--C2)",
-          "(B2--C1 + B2--C2) > (B1--C1 + B1--C2)")
-         
-# test
-test <- lin_comb(hyps,
-                 est,
-                 cri_level = 0.95)
-test
-
-#> bayeslincom: Linear Combinations of Posterior Samples
-#> ------ 
-#> Call:
-#> lin_comb.BGGM(lin_comb = lin_comb, obj = obj, cri_level = cri_level, 
-#>     rope = rope)
-#> ------ 
-#> Combinations:
-#>  C1: (B4--C1 + B4--C2) > (B2--C1 + B2--C2) 
-#>  C2: (B2--C1 + B2--C2) > (B1--C1 + B1--C2) 
-#> ------ 
-#> Posterior Summary:
-#> 
-#>    Post.mean Post.sd Cred.lb Cred.ub Pr.less Pr.greater
-#> C1      0.10    0.10   -0.16    0.34    0.23       0.77
-#> C2      0.21    0.21   -0.10    0.52    0.09       0.91
-#> ------ 
-#> Note:
-#> Pr.less: Posterior probability less than zero
-#> Pr.greater: Posterior probability greater than zero
-```
-
-``` r
-plot(test) +
-  ggplot2::theme_bw()
-```
-
-<img src="READMEplots/mult-comps.png" width="75%" height="75%" style="display: block; margin: auto;" />
-
-## Example: **ROPE**
 
 #### Comparison to **multcomp**
 
@@ -239,3 +187,104 @@ Although the results are nearly identical, note that **bayeslincom** (1)
 provides the posterior probability of a positive and negative
 difference; and (2) is compatible with essentially all `R`packages for
 Bayesian analysis.
+
+## Example: **Multiple Combinations**
+
+``` r
+library(BGGM)
+
+# data (+ 1)
+Y <- ptsd[, 1:7] + 1
+
+# BGGM estimate
+fit_est <- estimate(Y, type = "ordinal", iter = 100000)
+
+# example hypotheses
+hyps <- c("(B4--C1 + B4--C2) > (B2--C1 + B2--C2)",
+          "(B2--C1 + B2--C2) > (B1--C1 + B1--C2)")
+
+# test
+test <- lin_comb(hyps,
+                 fit_est,
+                 cri_level = 0.95)
+test
+
+#> bayeslincom: Linear Combinations of Posterior Samples
+#> ------ 
+#> Call:
+#> lin_comb.BGGM(lin_comb = lin_comb, obj = obj, cri_level = cri_level, 
+#>     rope = rope)
+#> ------ 
+#> Combinations:
+#>  C1: (B4--C1 + B4--C2) > (B2--C1 + B2--C2) 
+#>  C2: (B2--C1 + B2--C2) > (B1--C1 + B1--C2) 
+#> ------ 
+#> Posterior Summary:
+#>
+#>    Post.mean Post.sd Cred.lb Cred.ub Pr.less Pr.greater
+#> C1       0.1     0.1   -0.15    0.36    0.22       0.78
+#> C2       0.2     0.2   -0.10    0.51    0.10       0.90
+#> ------ 
+#> Note:
+#> Pr.less: Posterior probability less than zero
+#> Pr.greater: Posterior probability greater than zero
+```
+
+``` r
+plot(test) +
+  ggplot2::theme_bw()
+```
+
+![](READMEplots/mult-comps.png)
+
+## Example: **ROPE**
+
+``` r
+library(rstanarm)
+
+# data
+Y <- kidiq
+
+# fit model
+fit_rstan <- stan_glm(kid_score ~ mom_iq + mom_age, 
+                      data = Y, 
+                      family = gaussian,
+                      iter = 50000)
+
+# data frame
+samps <- as.data.frame(fit_rstan)
+
+# test ROPE
+rope <- lin_comb("mom_iq - mom_age = 0",
+                  obj = samps,
+                  cri_level = 0.95,
+                  rope = c(-1, 1))
+
+rope
+
+#> bayeslincom: Linear Combinations of Posterior Samples
+#> ------ 
+#> Call:
+#> lin_comb.data.frame(lin_comb = lin_comb, obj = obj, cri_level = cri_level, 
+#>     rope = rope)
+#> ------ 
+#> Combinations:
+#>  C1: mom_iq - mom_age = 0 
+#> ------ 
+#> Posterior Summary:
+#> 
+#> ROPE: [ -1 , 1 ] 
+#> 
+#>    Post.mean Post.sd Cred.lb Cred.ub   Pr.in
+#> C1      0.22    0.22   -0.44    0.88 0.98983
+#> ------ 
+#> Note:
+#> Pr.in: Posterior probability in ROPE
+```
+
+``` r
+plot(rope) +
+  ggplot2::theme_bw()
+```
+
+![](READMEplots/rope.png)
