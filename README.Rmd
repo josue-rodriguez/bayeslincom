@@ -196,7 +196,7 @@ plot(test) +
 ```
 ```{r echo=FALSE, out.width='75%', out.height='75%', fig.align='center'}
 knitr::include_graphics(
-  "READMEplots/mult-comps.svg",
+  "READMEplots/mult-comps.png",
   dpi = 360
 )
 ```

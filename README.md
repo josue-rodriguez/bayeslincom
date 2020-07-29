@@ -201,7 +201,7 @@ plot(test) +
   ggplot2::theme_bw()
 ```
 
-<img src="READMEplots/mult-comps.svg" width="75%" height="75%" style="display: block; margin: auto;" />
+<img src="READMEplots/mult-comps.png" width="75%" height="75%" style="display: block; margin: auto;" />
 
 ## Example: **ROPE**
 

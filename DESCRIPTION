@@ -2,8 +2,8 @@ Package: bayeslincom
 Type: Package
 Title: Linear Combinations of Bayesian Posterior Samples
 Version: 0.2.0
-Authors@R: c(person("Josue E.", "Rodriguez", email = "josue.rodriguez594@gmail.com", role = c("aut", "cre"),
-             person("Donald", "Williams", email = "drwwilliams@ucdavis.edu", role = "aut"))
+Authors@R: c(person(given = "Josue E.", family = "Rodriguez", email = "josue.rodriguez594@gmail.com", role = c("aut", "cre")),
+         person("Donald", "Williams", email = "drwwilliams@ucdavis.edu", role = "aut"))
 Description: Computes point estimates, standard deviations, and credible intervals for 
              linear combinations of posterior samples. Optionally performs ROPE tests.
 Depends: R (>= 4.0.0)
