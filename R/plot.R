@@ -62,7 +62,7 @@ plot.bayeslincom <- function(x,
       ids = row.names(cri_data)
     )
 
-  # need two merges for final plot data
+  # merge data for CrI bar and mean point
   plot_data <- merge(segment_data, raw_means, by = "comb")
 
   # Extract & clean samples

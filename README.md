@@ -9,9 +9,9 @@
 Status](https://travis-ci.org/josue-rodriguez/bayeslincom.svg?branch=master)](https://travis-ci.org/josue-rodriguez/bayeslincom)
 <!-- badges: end -->
 
-The goal of `bayeslincom` is to provide point estimates, standard
+The goal of **bayeslincom** is to provide point estimates, standard
 deviations, and credible intervals for linear combinations of posterior
-samples. Additionally, it allows for ROPE tests
+samples. Additionally, it allows for ROPE tests.
 
 ## Installation
 
@@ -30,15 +30,23 @@ The development version from [GitHub](https://github.com/) with:
 devtools::install_github("josue-rodriguez/bayeslincom")
 ```
 
-Some basic examples for solving a common problems with the `R` package
-**bayeslincom**:
+## How to use **bayeslincom**
+
+``` r
+library(bayeslincom)
+```
+
+The main function is `lin_comb`. The following examples show how this
+function can be used to test linear combinations of posterior samples in
+tandem with different object types.
 
 ## Example: **BBcor**
 
-The **BBcor** package provides Bayesian bootstrapped correlations and
-partial correlations. In the following, the test is whether one
-correlation is larger than the sum of two correlations. The correlations
-can be estimated with
+The [**BBcor**](https://github.com/donaldRwilliams/BBcor) package
+provides Bayesian bootstrapped correlations and partial correlations. In
+the following, the test is whether the magnitude of one correlation is
+larger than that for a sum of two correlations. The correlations can be
+estimated with
 
 ``` r
 library(BBcor)
@@ -47,10 +55,10 @@ library(BBcor)
 Y <- mtcars[, c("mpg", "wt", "hp")]
 
 # fit model
-fit <- bbcor(Y, method = "spearman")
+fit_bb <- bbcor(Y, method = "spearman")
 
 # print
-fit
+fit_bb
 
 #>           mpg         wt         hp
 #> mpg  1.0000000 -0.8842590 -0.8946683
@@ -69,10 +77,8 @@ magnitude is being compared. Next the hypothesis is tested using the
 `lin_comb` function
 
 ``` r
-library(bayeslincom)
-
 lin_comb(hyp, 
-         obj = fit, 
+         obj = fit_bb, 
          cri_level = 0.95)
 
 #> bayeslincom: Linear Combinations of Posterior Samples
@@ -101,6 +107,62 @@ This example also demonstrates a key contribution of **bayeslincom**,
 i.e., testing linear combinations among dependent correlations. This is
 the only Bayesian (and possibly in general) implementation in `R`.
 
+## Example: **Multiple Combinations**
+
+The [**BGGM**](https://github.com/donaldRwilliams/BGGM) (Williams and
+Mulder 2019; Williams et al. 2020) package provides tools for Bayesian
+estimation and hypothesis testing within Gaussian graphical models
+(i.e., partial correlation networks). This package is particularly
+useful as it estimates the posterior distribution for a network made up
+of ordinal, binary, or mixed data.
+
+``` r
+library(BGGM)
+
+# data (+ 1)
+Y <- ptsd[, 1:7] + 1
+
+# BGGM estimate
+fit_bggm <- estimate(Y, type = "ordinal", iter = 100000)
+
+# example hypotheses
+hyps <- c("(B4--C1 + B4--C2) > (B2--C1 + B2--C2)",
+          "(B2--C1 + B2--C2) > (B1--C1 + B1--C2)")
+
+# test
+test <- lin_comb(hyps,
+                 fit_bggm,
+                 cri_level = 0.95)
+test
+
+#> bayeslincom: Linear Combinations of Posterior Samples
+#> ------ 
+#> Call:
+#> lin_comb.BGGM(lin_comb = lin_comb, obj = obj, cri_level = cri_level, 
+#>     rope = rope)
+#> ------ 
+#> Combinations:
+#>  C1: (B4--C1 + B4--C2) > (B2--C1 + B2--C2) 
+#>  C2: (B2--C1 + B2--C2) > (B1--C1 + B1--C2) 
+#> ------ 
+#> Posterior Summary:
+#>
+#>    Post.mean Post.sd Cred.lb Cred.ub Pr.less Pr.greater
+#> C1       0.1     0.1   -0.15    0.36    0.22       0.78
+#> C2       0.2     0.2   -0.10    0.51    0.10       0.90
+#> ------ 
+#> Note:
+#> Pr.less: Posterior probability less than zero
+#> Pr.greater: Posterior probability greater than zero
+```
+
+``` r
+plot(test) +
+  ggplot2::theme_bw()
+```
+
+![](READMEplots/mult-comps.png)
+
 ## Example: Data Frame
 
 ### **MCMCpack**
@@ -126,7 +188,7 @@ samps <- as.data.frame(fit_mcmc)
                                    
 # test hypothesis
 test <- lin_comb(lin_comb = "vs - hp = 0", 
-                 obj  = samps, 
+                 obj = samps, 
                  cri_level = 0.95)                                 
 
 # print results
@@ -188,56 +250,11 @@ provides the posterior probability of a positive and negative
 difference; and (2) is compatible with essentially all `R`packages for
 Bayesian analysis.
 
-## Example: **Multiple Combinations**
-
-``` r
-library(BGGM)
-
-# data (+ 1)
-Y <- ptsd[, 1:7] + 1
-
-# BGGM estimate
-fit_est <- estimate(Y, type = "ordinal", iter = 100000)
-
-# example hypotheses
-hyps <- c("(B4--C1 + B4--C2) > (B2--C1 + B2--C2)",
-          "(B2--C1 + B2--C2) > (B1--C1 + B1--C2)")
-
-# test
-test <- lin_comb(hyps,
-                 fit_est,
-                 cri_level = 0.95)
-test
-
-#> bayeslincom: Linear Combinations of Posterior Samples
-#> ------ 
-#> Call:
-#> lin_comb.BGGM(lin_comb = lin_comb, obj = obj, cri_level = cri_level, 
-#>     rope = rope)
-#> ------ 
-#> Combinations:
-#>  C1: (B4--C1 + B4--C2) > (B2--C1 + B2--C2) 
-#>  C2: (B2--C1 + B2--C2) > (B1--C1 + B1--C2) 
-#> ------ 
-#> Posterior Summary:
-#>
-#>    Post.mean Post.sd Cred.lb Cred.ub Pr.less Pr.greater
-#> C1       0.1     0.1   -0.15    0.36    0.22       0.78
-#> C2       0.2     0.2   -0.10    0.51    0.10       0.90
-#> ------ 
-#> Note:
-#> Pr.less: Posterior probability less than zero
-#> Pr.greater: Posterior probability greater than zero
-```
-
-``` r
-plot(test) +
-  ggplot2::theme_bw()
-```
-
-![](READMEplots/mult-comps.png)
-
 ## Example: **ROPE**
+
+Testing against a null value can be done using a ROPE (region of
+practical equivalence) (Rouder, Haaf, and Vandekerckhove 2018; Kruschke
+and Liddell 2018).
 
 ``` r
 library(rstanarm)
@@ -288,3 +305,45 @@ plot(rope) +
 ```
 
 ![](READMEplots/rope.png)
+
+## References
+
+<div id="refs" class="references">
+
+<div id="ref-kruschkeBayesian2018">
+
+Kruschke, John K., and Torrin M. Liddell. 2018. “The Bayesian New
+Statistics: Hypothesis Testing, Estimation, Meta-Analysis, and Power
+Analysis from a Bayesian Perspective.” *Psychonomic Bulletin & Review*
+25 (1): 178–206. <https://doi.org/10.3758/s13423-016-1221-4>.
+
+</div>
+
+<div id="ref-rouderBayesian2018">
+
+Rouder, Jeffrey N., Julia M. Haaf, and Joachim Vandekerckhove. 2018.
+“Bayesian Inference for Psychology, Part IV: Parameter Estimation and
+Bayes Factors.” *Psychonomic Bulletin & Review* 25 (1): 102–13.
+<https://doi.org/10.3758/s13423-017-1420-7>.
+
+</div>
+
+<div id="ref-williamsBayesian2019">
+
+Williams, Donald Ray, and Joris Mulder. 2019. “Bayesian Hypothesis
+Testing for Gaussian Graphical Models: Conditional Independence and
+Order Constraints.” Preprint. PsyArXiv.
+<https://doi.org/10.31234/osf.io/ypxd8>.
+
+</div>
+
+<div id="ref-williamsComparing2020">
+
+Williams, Donald R., Philippe Rast, Luis R. Pericchi, and Joris Mulder.
+2020. “Comparing Gaussian Graphical Models with the Posterior Predictive
+Distribution and Bayesian Model Selection.” *Psychological Methods*.
+<https://doi.org/10.1037/met0000254>.
+
+</div>
+
+</div>

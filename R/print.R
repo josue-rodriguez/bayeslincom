@@ -6,8 +6,8 @@
 #' @export print.bayeslincom
 #' @export
 print.bayeslincom <- function(x, ...) {
-
   res <- x$results
+
   cri_raw <- extract_list_items(res, "cri")
   cri <- round(cri_raw, 2)
 
@@ -25,7 +25,7 @@ print.bayeslincom <- function(x, ...) {
   )
   row.names(print_df) <- names(x$results)
 
-
+  # ---- Begin pasting output ----
   cat("bayeslincom: Linear Combinations of Posterior Samples\n")
   cat("------ \n")
   cat("Call:\n")
