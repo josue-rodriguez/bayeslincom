@@ -197,11 +197,11 @@ test
 ```
 
 ``` r
-plot(rope_test, bins = 50) +
+plot(test) +
   ggplot2::theme_bw()
 ```
 
-<img src="READMEplots/mult-comps.svg" width="90%" height="90%" style="display: block; margin: auto;" />
+<img src="READMEplots/mult-comps.svg" width="75%" height="75%" style="display: block; margin: auto;" />
 
 ## Example: **ROPE**
 

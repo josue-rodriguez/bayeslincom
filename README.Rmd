@@ -191,10 +191,10 @@ test
 #> Pr.greater: Posterior probability greater than zero
 ```
 ```r
-plot(rope_test, bins = 50) +
+plot(test) +
   ggplot2::theme_bw()
 ```
-```{r echo=FALSE, out.width='90%', out.height='90%', fig.align='center'}
+```{r echo=FALSE, out.width='75%', out.height='75%', fig.align='center'}
 knitr::include_graphics(
   "READMEplots/mult-comps.svg",
   dpi = 360
