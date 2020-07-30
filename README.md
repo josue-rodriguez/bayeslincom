@@ -109,13 +109,13 @@ the only Bayesian (and possibly in general) implementation in `R`.
 
 ## Example: **Multiple Combinations**
 
-The [**BGGM**](https://github.com/donaldRwilliams/BGGM) (Williams and
-Mulder 2019; Williams et al. 2020) package provides tools for Bayesian
-estimation and hypothesis testing within Gaussian graphical models
-(i.e., partial correlation networks). This package is particularly
-useful as it estimates the posterior distribution for a partial
-correlations based on ordinal (polychoric), binary (tetrachoric), or
-mixed data.
+The [**BGGM**](https://github.com/donaldRwilliams/BGGM) package
+(Williams and Mulder 2019; Williams et al. 2020) provides tools for
+Bayesian estimation and hypothesis testing within Gaussian graphical
+models (i.e., partial correlation networks). This package is
+particularly useful as it estimates the posterior distribution for a
+partial correlations based on ordinal (polychoric), binary
+(tetrachoric), or mixed data.
 
 An ordinal network can be estimated with
 
@@ -188,8 +188,6 @@ plot(test) +
 
 ## Example: Data Frame
 
-### **MCMCpack**
-
 There are a variety of `R` packages that provide samples from the
 posterior distribution. By placing the respective samples into a
 `data.frame`, **bayeslincom** can be used to test linear combinations.
@@ -202,9 +200,9 @@ library(MCMCpack)
 Y <- mtcars
 
 # fit model
-fit_mcmc <- MCMCpack::MCMCregress(mpg ~ vs + hp, 
-                                   data = Y, 
-                                   mcmc = 100000)
+fit_mcmc <- MCMCregress(mpg ~ vs + hp, 
+                        data = Y, 
+                        mcmc = 100000)
                                    
 # data frame
 samps <- as.data.frame(fit_mcmc)
@@ -275,9 +273,19 @@ Bayesian analysis.
 
 ## Example: **ROPE**
 
-Testing against a null value can be done using a ROPE (region of
-practical equivalence) (Rouder, Haaf, and Vandekerckhove 2018; Kruschke
-and Liddell 2018).
+Testing against a null value can be done using a region of practical
+equivalence (ROPE) (Rouder, Haaf, and Vandekerckhove 2018; Kruschke and
+Liddell 2018). The ROPE approach is similar in spirit to a frequentist
+approach wherein a parameter value is rejected if it is not covered by a
+confidence interval at a particular level. The difference with the ROPE
+is that the null value is only rejected if there is no overlap between
+the credible interval and the ROPE. Conversely, the null value is only
+accepted if the entire credible interval is inside the ROPE\>
+
+In the following example, a model is fit using
+[**rstanarm**](https://github.com/stan-dev/rstanarm). The difference
+between the coefficients for `mom_iq` an `mom_age` is tested against a
+null value of zero with a ROPE corresponding to \[-1, 1\]
 
 ``` r
 library(rstanarm)
