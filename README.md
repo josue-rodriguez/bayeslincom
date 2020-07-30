@@ -113,8 +113,11 @@ The [**BGGM**](https://github.com/donaldRwilliams/BGGM) (Williams and
 Mulder 2019; Williams et al. 2020) package provides tools for Bayesian
 estimation and hypothesis testing within Gaussian graphical models
 (i.e., partial correlation networks). This package is particularly
-useful as it estimates the posterior distribution for a network made up
-of ordinal, binary, or mixed data.
+useful as it estimates the posterior distribution for a partial
+correlations based on ordinal (polychoric), binary (tetrachoric), or
+mixed data.
+
+An ordinal network can be estimated with
 
 ``` r
 library(BGGM)
@@ -124,8 +127,14 @@ Y <- ptsd[, 1:7] + 1
 
 # BGGM estimate
 fit_bggm <- estimate(Y, type = "ordinal", iter = 100000)
+```
 
-# example hypotheses
+Several combinations can then be formulated and then passed on to
+`lin_comb`. This can be done by placing strings of combinations into a
+vector as shown below.
+
+``` r
+# example combinations
 hyps <- c("(B4--C1 + B4--C2) > (B2--C1 + B2--C2)",
           "(B2--C1 + B2--C2) > (B1--C1 + B1--C2)")
 
@@ -155,6 +164,20 @@ test
 #> Pr.less: Posterior probability less than zero
 #> Pr.greater: Posterior probability greater than zero
 ```
+
+The first combination tests whether the PTSD symptom “emotional
+reactivity” (B4) has a stronger relationship than the symptom
+“nightmares” (B2) with the cluster of nodes representing “avoidance”
+(C1 and C2). The second combination tests the same, except for testing
+for “nightmares” and “intrusive thoughts” (B1).
+
+In addition to being the only implementation in `R` for testing linear
+combinations of (partial) correlations it is also the only
+implementation for testing linear combinations of polychoric and
+tetrachoric correlations (due to the **BGGM** sampling algorithms).
+
+Objects created with `lin_comb` also have a `plot` method which returns
+a **ggplot2** object that can further be customized, e.g.
 
 ``` r
 plot(test) +
