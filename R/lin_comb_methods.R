@@ -13,14 +13,13 @@ lin_comb.BGGM <- function(lin_comb,
     stop("Please install the 'BGGM' package.")
   }
 
-  # out <- vector("list", length(lin_comb) + 3)
   out <- lc_list <-  list()
   for (lc_ind in seq_along(lin_comb)) {
     # Extract variable names
     all_vars <- extract_var_names(obj)
-    comb <- clean_comb(lin_comb[lc_ind])
 
     # extract all correlations in hyp
+    comb <- clean_comb(lin_comb[lc_ind])
     comb_vars_list <- get_matches("[[:alnum:]]+--[[:alnum:]]+", comb)
     comb_vars <- unlist(comb_vars_list)
 
@@ -48,7 +47,6 @@ lin_comb.BGGM <- function(lin_comb,
     # bounds for credible interval
     a <- (1 - cri_level) / 2
     cri_bounds <- c(a, 1 - a)
-
     cri <- quantile(post_eval, cri_bounds)
 
     post_mean <- mean(post_eval)
@@ -66,9 +64,8 @@ lin_comb.BGGM <- function(lin_comb,
                    prob_greater = prob_greater,
                    support = rope_info$support)
     lc_list[[lc_ind]] <- out_lc
-
   }
-  names(lc_list) <- paste0("C", 1:length(lin_comb))
+  names(lc_list) <- paste0("C", seq_along(lin_comb))
 
   out$results <- lc_list
   out$rope <- rope
@@ -96,7 +93,6 @@ lin_comb.bbcor <- function(lin_comb,
 
   # initialize empty lists for storing individual results and returned object
   out <- lc_list <- list()
-
   for (lc_ind in seq_along(lin_comb)) {
     comb <- clean_comb(lin_comb[lc_ind])
 
@@ -128,7 +124,6 @@ lin_comb.bbcor <- function(lin_comb,
     # bounds for credible interval
     a <- (1 - cri_level) / 2
     cri_bounds <- c(a, 1 - a)
-
     cri <- quantile(post_eval, cri_bounds)
 
     post_mean <- mean(post_eval)
@@ -147,7 +142,7 @@ lin_comb.bbcor <- function(lin_comb,
                    support = rope_info$support)
     lc_list[[lc_ind]] <- out_lc
   }
-  names(lc_list) <- paste0("C", 1:length(lin_comb))
+  names(lc_list) <- paste0("C", seq_along(lin_comb))
 
   out$results <- lc_list
   out$rope <- rope
@@ -170,9 +165,8 @@ lin_comb.data.frame <- function(lin_comb,
 
   out <- lc_list <- list()
   for (lc_ind in seq_along(lin_comb)) {
-    comb <- clean_comb(lin_comb[lc_ind])
-
     # extract all correlations in hyp
+    comb <- clean_comb(lin_comb[lc_ind])
     comb_vars <- find_vars(comb)
 
     # add backticks for evaluation of hypotheses
@@ -197,7 +191,6 @@ lin_comb.data.frame <- function(lin_comb,
     # bounds for credible interval
     a <- (1 - cri_level) / 2
     cri_bounds <- c(a, 1 - a)
-
     cri <- quantile(post_eval, cri_bounds)
 
     post_mean <- mean(post_eval)
@@ -216,7 +209,7 @@ lin_comb.data.frame <- function(lin_comb,
                    support = rope_info$support)
     lc_list[[lc_ind]] <- out_lc
   }
-  names(lc_list) <- paste0("C", 1:length(lin_comb))
+  names(lc_list) <- paste0("C", seq_along(lin_comb))
 
   out$results <- lc_list
   out$rope <- rope

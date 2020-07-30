@@ -129,6 +129,9 @@ Y <- ptsd[, 1:7] + 1
 fit_bggm <- estimate(Y, type = "ordinal", iter = 100000)
 ```
 
+Note that 1 is added to the data in order to ensure the first category
+is 1 when `type = "ordinal"`.
+
 Several combinations can then be formulated and then passed on to
 `lin_comb`. This can be done by placing strings of combinations into a
 vector as shown below.

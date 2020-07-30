@@ -16,7 +16,8 @@ Imports:
     stats,
     lifecycle
 Suggests:
-  BBcor,
-  BGGM
+    BBcor,
+    BGGM,
+    testthat
 RoxygenNote: 7.1.1
 RdMacros: lifecycle
