@@ -63,8 +63,8 @@ clean_comb <- function(lin_comb) {
   # extract sign
   sign <- get_sign(comb)
 
-  if (length(sign) != 1L & sign %in% c("=", "<", ">")) {
-    stop("LHS and RHS of 'lin_comb' must be separated by '=', '<', or '>'")
+  if (length(sign) != 1L || !sign %in% c("=", "<", ">")) {
+    stop("LHS and RHS of 'lin_comb' must be separated by a single '=', '<', or '>'")
   }
 
   # left and right hand sides of hypothesis

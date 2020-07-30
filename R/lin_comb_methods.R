@@ -31,7 +31,7 @@ lin_comb.BGGM <- function(lin_comb,
                         x = comb_eval)
     }
 
-    # check all parameters in hypothesis are valid
+    # check all parameters in combination are valid
     miss_pars <- setdiff(comb_vars, all_vars)
     if (length(miss_pars)) {
       miss_pars <- paste(miss_pars, collapse = ",")
@@ -108,7 +108,7 @@ lin_comb.bbcor <- function(lin_comb,
                         x = comb_eval)
     }
 
-    # check all parameters in hypothesis are valid
+    # check all parameters in combination are valid
     miss_pars <- setdiff(comb_vars, all_vars)
     if (length(miss_pars)) {
       miss_pars <- paste(miss_pars, collapse = ",")
@@ -177,7 +177,7 @@ lin_comb.data.frame <- function(lin_comb,
                         x = comb_eval)
     }
 
-    # check all parameters in hypothesis are valid
+    # check all parameters in combination are valid
     miss_pars <- setdiff(comb_vars, all_vars)
     if (length(miss_pars)) {
       miss_pars <- paste(miss_pars, collapse = ",")
