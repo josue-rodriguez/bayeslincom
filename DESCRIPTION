@@ -1,20 +1,26 @@
 Package: bayeslincom
 Type: Package
 Title: Linear Combinations of Bayesian Posterior Samples
-Version: 0.1.0
-Author: Josue E. Rodriguez
-Maintainer: Josue E. Rodriguez <josue.rodriguez594@gmail.com>
-Description: Computes point estimates, standard deviations, and credible intervals for 
-             linear combinations of posterior samples.
+Version: 0.2.0
+Authors@R: c(person("Josue E.", "Rodriguez", email = "josue.rodriguez594@gmail.com", role = c("aut", "cre")),
+             person("Donald", "Williams", email = "drwwilliams@ucdavis.edu", role = "aut"))
+Description: Computes point estimates, standard deviations, and credible intervals 
+             for linear combinations of posterior samples. Optionally performs region
+             practical equivalence (ROPE) tests as described in 
+             Kruschke and Liddell (2018) <doi:10.3758/s13423-016-1221-4>.
 Depends: R (>= 4.0.0)
-License: GPL-2
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
-  ggplot2,
-  methods,
-  stats
+    ggplot2,
+    methods,
+    stats,
+    lifecycle
 Suggests:
-  BBcor,
-  BGGM
+    BBcor,
+    BGGM,
+    testthat
 RoxygenNote: 7.1.1
+RdMacros: lifecycle
+BugReports: https://github.com/josue-rodriguez/bayeslincom/issues

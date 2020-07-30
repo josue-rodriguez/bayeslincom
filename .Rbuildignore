@@ -1,7 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^test-hyp\.R$
-^bayes_bootstrap\.R$
 ^lin_comb2\.R$
 ^README\.Rmd$
 ^\.travis\.yml$
+^READMEplots$
+^cran-comments\\.md$

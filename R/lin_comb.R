@@ -17,18 +17,14 @@
 #' # names
 #' colnames(Y) <- letters[1:20]
 #'
-#' ###########################
-#' ######### BGGM ############
-#' ###########################
-#'
 #' # estimate model
 #' est <- BGGM::estimate(Y)
 #'
 #' # test
 #' bggm_comb <- lin_comb("a--c + a--d > b--c + b--d",
-#'                     obj = est,
-#'                     cri_level = 0.90,
-#'                     rope = c(-0.1, 0.1))
+#'                        obj = est,
+#'                        cri_level = 0.90,
+#'                        rope = c(-0.1, 0.1))
 #'
 #' # print
 #' bggm_comb
@@ -39,8 +35,6 @@ lin_comb <- function(lin_comb,
                      cri_level = 0.90,
                      rope = NULL) {
 
-  check <- check_lin_comb(lin_comb)
-
   if (methods::is(obj, "data.frame")) {
     out <- lin_comb.data.frame(lin_comb, obj, cri_level, rope)
   } else if (methods::is(obj, "BGGM")) {
@@ -48,7 +42,7 @@ lin_comb <- function(lin_comb,
   } else if (methods::is(obj, "bbcor")) {
     out <- lin_comb.bbcor(lin_comb, obj, cri_level, rope)
   } else {
-    stop("object class not supported. must be 'BGGM', 'BBcor', or 'data.fram'")
+    stop("Object class not supported. Must be 'BGGM', 'BBcor', or 'data.frame'")
     }
   return(out)
 }

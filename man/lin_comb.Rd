@@ -28,18 +28,14 @@ Y <- BGGM::ptsd
 # names
 colnames(Y) <- letters[1:20]
 
-###########################
-######### BGGM ############
-###########################
-
 # estimate model
 est <- BGGM::estimate(Y)
 
 # test
 bggm_comb <- lin_comb("a--c + a--d > b--c + b--d",
-                    obj = est,
-                    cri_level = 0.90,
-                    rope = c(-0.1, 0.1))
+                       obj = est,
+                       cri_level = 0.90,
+                       rope = c(-0.1, 0.1))
 
 # print
 bggm_comb
