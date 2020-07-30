@@ -4,3 +4,4 @@
 ^README\.Rmd$
 ^\.travis\.yml$
 ^READMEplots$
+^cran-comments\\.md$
