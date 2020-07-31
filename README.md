@@ -187,7 +187,7 @@ plot(test) +
   ggplot2::theme_bw()
 ```
 
-![](READMEplots/mult-comps.png)
+![](inst/figures/mult-comps.png)
 
 ## Example: Data Frame
 
@@ -338,7 +338,7 @@ plot(rope) +
   ggplot2::theme_bw()
 ```
 
-![](READMEplots/rope.png)
+![](inst/figures/rope.png)
 
 ## References
 

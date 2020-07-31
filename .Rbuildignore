@@ -5,4 +5,5 @@
 ^\.travis\.yml$
 ^READMEplots$
 ^cran-comments\\.md$
+^cran-comments\.md$
 ^LICENSE$
