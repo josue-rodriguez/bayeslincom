@@ -69,13 +69,14 @@ sticker(
   p_size = 12,
   p_y = 1.5,
   # plot settings
-  s_x = 1.05,
+  s_x = 1.02,
   s_y = 0.9,
   s_width =  0.9,
   s_height = 0.9,
   # hex settings
   h_fill = "#046A38",
   h_color = "#FFC72C",
+  h_size = 2.25,
   filename = "inst/figures/hex_sticker.png",
   dpi = 320
 )
