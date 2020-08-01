@@ -5,7 +5,9 @@
 
 <!-- hex sticker -->
 
-![](inst/figures/hex_sticker.png)
+<img src="inst/figures/hex_sticker.png" width = 250 />
+
+<!-- ![](inst/figures/hex_sticker.png) -->
 
 <!-- badges: start -->
 
