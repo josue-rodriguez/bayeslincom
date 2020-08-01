@@ -3,6 +3,10 @@
 
 # bayeslincom
 
+<!-- hex sticker -->
+
+![](inst/figures/hex_sticker.png)
+
 <!-- badges: start -->
 
 ![lifecycle](man/figures/lifecycle-experimental.svg) [![Build

@@ -1,9 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^lin_comb2\.R$
 ^README\.Rmd$
 ^\.travis\.yml$
 ^READMEplots$
 ^cran-comments\\.md$
 ^cran-comments\.md$
 ^LICENSE$
+^CRAN-RELEASE$
+^inst/figures/make_hex\.R$
