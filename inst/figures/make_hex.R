@@ -1,19 +1,17 @@
 library(ggplot2)
-library(dplyr)
 library(hexSticker)
 library(showtext)
 
 set.seed(1)
 samps <- rnorm(1e4, mean = 0, sd = 1/3)
-post_samps <- tibble(samples = samps)
+post_samps <- tibble::tibble(samples = samps)
 
-post_samps %>%
-  ggplot(aes(samples)) +
+ggplot(post_samps, aes(samples)) +
   geom_histogram(bins = 30,
                  col = "black",
                  fill = "#FFC72C",
                  size = 1) +
-  # CrI
+  # Credible Interval
   geom_segment(x = -0.8,
                xend = 0.8,
                y = 0,
@@ -31,8 +29,6 @@ post_samps %>%
              col = "white",
              size = 1) +
   # Plot settings
-  labs(x = "",
-       y = "") +
   scale_x_continuous(labels = NULL) +
   scale_y_continuous(labels = NULL) +
   theme_void() +
@@ -43,7 +39,7 @@ post_samps %>%
     panel.background = element_blank(),
     plot.background = element_blank(),
     plot.title = element_text(hjust = 0.5, size = 36, color = "white")
-  )  -> rope_plot
+  ) -> rope_plot
 
 # rope_plot
 ggsave(
@@ -53,13 +49,13 @@ ggsave(
   width = 15,
   height = 7.5,
   units = "cm",
-  dpi = 300)
+  dpi = 300
+  )
 
-# fonts
-# font_add_google("Fira Code", "fira")
-# showtext_auto()
+# add font & make sticker
+font_add_google("Fira Code", "fira")
+showtext_auto()
 
-# rope_plot
 sticker(
   "inst/figures/hex_plot.png",
   # package settings
@@ -80,5 +76,3 @@ sticker(
   filename = "inst/figures/hex_sticker.png",
   dpi = 320
 )
-
-# a test
