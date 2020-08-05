@@ -21,13 +21,12 @@ samples. Additionally, it allows for ROPE tests.
 
 ## Installation
 
-<!-- You can install the released version of bayeslincom from [CRAN](https://CRAN.R-project.org) with: -->
+You can install the released version of bayeslincom from
+[CRAN](https://CRAN.R-project.org) with:
 
-<!-- ``` r -->
-
-<!-- install.packages("bayeslincom") -->
-
-<!-- ``` -->
+``` r
+install.packages("bayeslincom")
+```
 
 The development version from [GitHub](https://github.com/) with:
 
