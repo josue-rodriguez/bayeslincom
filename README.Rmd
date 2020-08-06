@@ -256,9 +256,9 @@ confint(
 Although the results are nearly identical, note that **bayeslincom** (1) provides the posterior probability of a positive and negative difference; and (2) is compatible with essentially all `R `packages for Bayesian analysis.
 
 ## Example: **ROPE**
-Testing against a null value can be done using a region of practical equivalence (ROPE) [@rouderBayesian2018; @kruschkeBayesian2018]. The ROPE approach is similar in spirit to a frequentist approach wherein a parameter value is rejected if it is not covered by a confidence interval at a particular level. The difference with the ROPE is that the null value is only rejected if there is no overlap between the credible interval and the ROPE. Conversely, the null value is only accepted if the entire credible interval is inside the ROPE>
+Testing against a null value can be done using a region of practical equivalence (ROPE) [@rouderBayesian2018; @kruschkeBayesian2018]. The ROPE approach is similar in spirit to a frequentist approach wherein a parameter value is rejected if it is not covered by a confidence interval at a particular level. The difference with the ROPE is that the null value is only rejected if there is no overlap between the credible interval and the ROPE. Conversely, the null value is only accepted if the entire credible interval is inside the ROPE. 
 
-In the following example, a model is fit using [**rstanarm**](https://github.com/stan-dev/rstanarm). The difference between the coefficients for `mom_iq` an `mom_age` is tested against a null value of zero with a ROPE corresponding to [-1, 1]
+In the following example, a model is fit using [**rstanarm**](https://github.com/stan-dev/rstanarm). The difference between the coefficients for `mom_iq` an `mom_age` is tested against a null value of zero with a ROPE corresponding to [-1, 1].
 
 ```r
 library(rstanarm)

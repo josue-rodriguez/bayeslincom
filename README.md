@@ -288,12 +288,12 @@ approach wherein a parameter value is rejected if it is not covered by a
 confidence interval at a particular level. The difference with the ROPE
 is that the null value is only rejected if there is no overlap between
 the credible interval and the ROPE. Conversely, the null value is only
-accepted if the entire credible interval is inside the ROPE\>
+accepted if the entire credible interval is inside the ROPE.
 
 In the following example, a model is fit using
 [**rstanarm**](https://github.com/stan-dev/rstanarm). The difference
 between the coefficients for `mom_iq` an `mom_age` is tested against a
-null value of zero with a ROPE corresponding to \[-1, 1\]
+null value of zero with a ROPE corresponding to \[-1, 1\].
 
 ``` r
 library(rstanarm)
