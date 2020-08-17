@@ -13,11 +13,15 @@
 
 ![lifecycle](man/figures/lifecycle-experimental.svg) [![Build
 Status](https://travis-ci.org/josue-rodriguez/bayeslincom.svg?branch=master)](https://travis-ci.org/josue-rodriguez/bayeslincom)
+[![](https://cranlogs.r-pkg.org/badges/bayeslincom)](https://cran.rstudio.com/web/packages/bayeslincom/index.html)
+
 <!-- badges: end -->
 
 The goal of **bayeslincom** is to provide point estimates, standard
 deviations, and credible intervals for linear combinations of posterior
-samples. Additionally, it allows for ROPE tests.
+samples. Additionally, it allows for testing against using null values
+using a region of practical equivalence (ROPE) approach (Kruschke and
+Liddell 2018).
 
 ## Installation
 
