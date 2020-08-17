@@ -11,7 +11,10 @@
 
 <!-- badges: start -->
 
-![lifecycle](man/figures/lifecycle-experimental.svg) [![Build
+[![CRAN
+Version](http://www.r-pkg.org/badges/version/bayeslincom)](https://cran.r-project.org/package=bayeslincom)
+[![Downloads](https://cranlogs.r-pkg.org/badges/bayeslincom)](https://cran.r-project.org/package=bayeslincom)
+[![Build
 Status](https://travis-ci.org/josue-rodriguez/bayeslincom.svg?branch=master)](https://travis-ci.org/josue-rodriguez/bayeslincom)
 [![](https://cranlogs.r-pkg.org/badges/bayeslincom)](https://cran.rstudio.com/web/packages/bayeslincom/index.html)
 
