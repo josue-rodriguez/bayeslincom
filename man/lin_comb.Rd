@@ -4,16 +4,18 @@
 \alias{lin_comb}
 \title{Perform a linear combination of posterior samples}
 \usage{
-lin_comb(lin_comb, obj, cri_level = 0.9, rope = NULL)
+lin_comb(lin_comb, obj, cri_level = 0.9, rope = NULL, contrast = NULL)
 }
 \arguments{
-\item{lin_comb}{A string specifying a linear combination of variables}
+\item{lin_comb}{A string specifying a linear combination of variables, or a list of variable names if using \code{contrast}.}
 
-\item{obj}{An object of class \code{BGGM}, \code{bbcor}, or a \code{data.frame} of posterior samples}
+\item{obj}{An object of class \code{BGGM}, \code{bbcor}, or a \code{data.frame} of posterior samples.}
 
-\item{cri_level}{The level for which a credible interval should be computed}
+\item{cri_level}{The level for which a credible interval should be computed.}
 
 \item{rope}{Specify a ROPE. Optional.}
+
+\item{contrast}{A contrast matrix specifying which combinations to test.}
 }
 \value{
 An object of class \code{lin_comb}
