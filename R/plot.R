@@ -37,7 +37,7 @@ plot.bayeslincom <- function(x,
   res <- x$results
 
   # Extract & clean means + CrI dat a
-  raw_cri <- extract_list_items(res, "cri", as_df = TRUE)
+  raw_cri <- extract_list_items(res, "ci", as_df = TRUE)
   raw_means <- extract_list_items(res, "mean_samples", as_df = TRUE)
   raw_means$comb <- row.names(raw_means)
   names(raw_means) <- c("mean", "comb")

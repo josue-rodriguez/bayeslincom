@@ -8,7 +8,7 @@
 print.bayeslincom <- function(x, ...) {
   res <- x$results
 
-  cri_raw <- extract_list_items(res, "cri")
+  cri_raw <- extract_list_items(res, "ci")
   cri <- round(cri_raw, 2)
 
   Post.mean_raw <- extract_list_items(res, "mean_samples")

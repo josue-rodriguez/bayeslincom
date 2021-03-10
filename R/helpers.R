@@ -4,25 +4,23 @@
 ##############
 
 # ---- Determine ROPE info ----
-rope_helper <- function(rope, lin_comb, cri, post_eval) {
+rope_helper <- function(rope, lin_comb, quantiles, post_eval, ci) {
   if (!is.null(rope)) {
-    # decision rule
-    sign <- get_sign(lin_comb)
-    excludes_rope <- excludes_rope(cri, rope, sign)
-    rope_overlap <-
-      mean(rope[[1]] < post_eval & post_eval < rope[[2]])
 
-    if (sign != "=") {
-      support <- ifelse(excludes_rope,
-                        paste0("Test is supported"),
-                        paste0("Test is not supported"))
-      support <- as.character(support)
+    completely_in_rope <- rope[1] < quantiles[1] & quantiles[2] < rope[2]
+
+    if (completely_in_rope) {
+      support <- paste0(ci * 100, "% CI is completely in ROPE")
     } else {
-      support <- ifelse(excludes_rope,
-                        paste0("Test is not supported"),
-                        paste0("Test is supported"))
+      completely_excludes_rope <- (quantiles[2] < rope[1]) | (quantiles[1] > rope[2])
+
+      support <- ifelse(completely_excludes_rope,
+                        paste0(ci * 100, "% CI completely excludes ROPE"),
+                        paste0(ci * 100, "% CI does not completely exclude ROPE"))
       support <- as.character(support)
     }
+
+    rope_overlap <- mean(rope[[1]] < post_eval & post_eval < rope[[2]])
 
   } else {
     support <- NULL
@@ -33,26 +31,13 @@ rope_helper <- function(rope, lin_comb, cri, post_eval) {
   return(out)
 }
 
-# ---- Checks if interval excludes ROPE ----
-excludes_rope <- function(quantiles, rope, sign) {
-  if (sign == ">") {
-    excludes_rope <- quantiles[1] > rope[2]
-  }
-  else if (sign == "<") {
-    excludes_rope <- quantiles[2] < rope[1]
-  }
-  else {
-    excludes_rope <- !(rope[1] < quantiles[1] & quantiles[2] < rope[2])
-  }
-  return(excludes_rope)
-}
+
 
 ####################
 # Hypothesis parsers
 ####################
 
 # ---- Returns sign in combination string ----
-get_sign <- function(x) get_matches("=|<|>", x)
 
 # format combination string
 clean_comb <- function(lin_comb) {
