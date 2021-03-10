@@ -45,8 +45,8 @@ Y <- BGGM::ptsd
 colnames(Y) <- letters[1:20]
 est <- BGGM::estimate(Y)
 bggm_comb <- lin_comb("a--c + a--d > b--c + b--d",
-                    obj = est,
-                    cri_level = 0.90,
-                    rope = c(-0.1, 0.1))
+                      obj = est,
+                      ci = 0.90,
+                      rope = c(-0.1, 0.1))
 plot(bggm_comb)
 }

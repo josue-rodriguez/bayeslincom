@@ -30,6 +30,21 @@
 #'
 #' # print
 #' bggm_comb
+#'
+#' # Using a contrast matrix to test pairwise differences
+#' vars <- c("a--c", "a--d", "b--c")
+#'
+#' contrast_mat <- matrix(c(1, -1, 0,
+#'                          1, 0, -1,
+#'                          0, 1, -1), nrow = 3, byrow = TRUE)
+#'
+#' bggm_comb <- lin_comb(vars,
+#'                       obj = est,
+#'                       ci = 0.90,
+#'                       contrast = contrast_mat)
+#'# print
+#'bggm_comb
+#'
 #' @export
 #' @importFrom methods is
 lin_comb <- function(lin_comb,

@@ -16,9 +16,9 @@
 #'colnames(Y) <- letters[1:20]
 #'est <- BGGM::estimate(Y)
 #'bggm_comb <- lin_comb("a--c + a--d > b--c + b--d",
-#'                     obj = est,
-#'                     cri_level = 0.90,
-#'                     rope = c(-0.1, 0.1))
+#'                       obj = est,
+#'                       ci = 0.90,
+#'                       rope = c(-0.1, 0.1))
 #'plot(bggm_comb)
 #' @importFrom  ggplot2 ggplot aes_string geom_histogram geom_point geom_segment
 #'                      geom_vline facet_wrap

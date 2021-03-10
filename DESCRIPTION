@@ -1,7 +1,7 @@
 Package: bayeslincom
 Type: Package
 Title: Linear Combinations of Bayesian Posterior Samples
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: c(person("Josue E.", "Rodriguez", email = "josue.rodriguez594@gmail.com", role = c("aut", "cre")),
              person("Donald", "Williams", email = "drwwilliams@ucdavis.edu", role = "aut"))
 Description: Computes point estimates, standard deviations, and credible intervals 
