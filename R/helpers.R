@@ -38,6 +38,7 @@ rope_helper <- function(rope, lin_comb, quantiles, post_eval, ci) {
 ####################
 
 # ---- Returns sign in combination string ----
+get_sign <- function(x) get_matches("=|<|>", x)
 
 # format combination string
 clean_comb <- function(lin_comb) {

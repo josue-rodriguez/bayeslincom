@@ -15,7 +15,7 @@ print.bayeslincom <- function(x, ...) {
   Post.mean <- round(Post.mean_raw, 2)
 
   Post.sd_raw <- extract_list_items(res, "sd_samples")
-  Post.sd <- round(Post.mean_raw, 2)
+  Post.sd <- round(Post.sd_raw, 2)
 
   print_df <- data.frame(
     Post.mean = Post.mean,
