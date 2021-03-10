@@ -4,14 +4,14 @@
 \alias{lin_comb}
 \title{Perform a linear combination of posterior samples}
 \usage{
-lin_comb(lin_comb, obj, cri_level = 0.9, rope = NULL, contrast = NULL)
+lin_comb(lin_comb, obj, ci = 0.9, rope = NULL, contrast = NULL)
 }
 \arguments{
 \item{lin_comb}{A string specifying a linear combination of variables, or a list of variable names if using \code{contrast}.}
 
 \item{obj}{An object of class \code{BGGM}, \code{bbcor}, or a \code{data.frame} of posterior samples.}
 
-\item{cri_level}{The level for which a credible interval should be computed.}
+\item{ci}{The level for which a credible interval should be computed.}
 
 \item{rope}{Specify a ROPE. Optional.}
 
@@ -36,7 +36,7 @@ est <- BGGM::estimate(Y)
 # test
 bggm_comb <- lin_comb("a--c + a--d > b--c + b--d",
                        obj = est,
-                       cri_level = 0.90,
+                       ci = 0.90,
                        rope = c(-0.1, 0.1))
 
 # print
