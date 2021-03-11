@@ -15,12 +15,10 @@ LazyData: true
 Imports:
     ggplot2 (>= 3.3.2),
     methods,
-    stats,
-    lifecycle
+    stats
 Suggests:
     BBcor (>= 1.0.0),
     BGGM (>= 2.0.2),
     testthat
 RoxygenNote: 7.1.1
-RdMacros: lifecycle
 BugReports: https://github.com/josue-rodriguez/bayeslincom/issues
