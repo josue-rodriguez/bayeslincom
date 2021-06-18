@@ -1,4 +1,4 @@
-#' Perform a linear combination of posterior samples
+#' Plot a linear combination of posterior samples
 #'
 #' @param x An object of class \code{bayeslincom}
 #' @param bins Number of bins

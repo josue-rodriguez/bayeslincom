@@ -56,7 +56,9 @@ lin_comb.BGGM <- function(lin_comb,
 
         # Extract all correlations in hyp
         comb <- clean_comb(lin_comb[lc_ind])
-        comb_vars_list <- get_matches("[[:alnum:]]+--[[:alnum:]]+", comb)
+        # comb_vars_list <- get_matches("[[:alnum:]]+--[[:alnum:]]+", comb)
+        comb_vars_list <- get_matches("\\(.+?--.+?\\)", comb)
+        comb_vars_list <- sapply(comb_vars_list, function(x) gsub("[()]", "", x))
         comb_vars <- unlist(comb_vars_list)
 
         # add backticks for evaluation of hypotheses
@@ -177,7 +179,10 @@ lin_comb.bbcor <- function(lin_comb,
           comb <- clean_comb(lin_comb[lc_ind])
 
           # extract all correlations in hyp
-          comb_vars_list <- get_matches("[[:alnum:]]+--[[:alnum:]]+", comb)
+          # 6-11-21: added .+ and )$ to account for names with underscores
+          # comb_vars_list <- get_matches("^(.+[[:alnum:]]+--.+[[:alnum:]]+)$", comb)
+          comb_vars_list <- get_matches("\\(.+?--.+?\\)", comb)
+          comb_vars_list <- sapply(comb_vars_list, function(x) gsub("[()]", "", x))
           comb_vars <- unlist(comb_vars_list)
 
           # add backticks for evaluation of hypotheses
