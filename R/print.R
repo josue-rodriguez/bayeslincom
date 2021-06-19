@@ -26,7 +26,7 @@ print.bayeslincom <- function(x, ...) {
   row.names(print_df) <- names(x$results)
 
   # ---- Begin pasting output ----
-  cat("bayeslincom: Linear Combinations of Posterior Samples\n")
+  # cat("bayeslincom: Linear Combinations of Posterior Samples\n")
   cat("------ \n")
   cat("Call:\n")
   print(x$call)

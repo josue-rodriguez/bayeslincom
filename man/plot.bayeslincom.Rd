@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot.bayeslincom}
 \alias{plot.bayeslincom}
-\title{Perform a linear combination of posterior samples}
+\title{Plot a linear combination of posterior samples}
 \usage{
 \method{plot}{bayeslincom}(
   x,
@@ -38,7 +38,7 @@ is more than one combination in \code{x}}
 An object of class \code{ggplot}
 }
 \description{
-Perform a linear combination of posterior samples
+Plot a linear combination of posterior samples
 }
 \examples{
 Y <- BGGM::ptsd
