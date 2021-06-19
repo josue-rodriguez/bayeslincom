@@ -57,9 +57,26 @@ lin_comb.BGGM <- function(lin_comb,
         # Extract all correlations in hyp
         comb <- clean_comb(lin_comb[lc_ind])
         # comb_vars_list <- get_matches("[[:alnum:]]+--[[:alnum:]]+", comb)
-        comb_vars_list <- get_matches("\\(.+?--.+?\\)", comb)
-        comb_vars_list <- sapply(comb_vars_list, function(x) gsub("[()]", "", x))
+        # comb_vars_list <- get_matches("\\(.+?--.+?\\)", comb)
+        comb_vars_list <- get_matches("\\(.+?--.+?\\)", comb) # separates out variables
+
+        comb_vars_list <- gsub("[()]", "", comb_vars_list)
+
+        comb_vars_list <- strsplit(comb_vars_list, "[\\+<>\\/\\*]", perl = TRUE)
+
+
+        # GOLD: look behind positive
+        # https://stackoverflow.com/questions/2973436/regex-lookahead-lookbehind-and-atomic-groups
+        comb_vars_list <- strsplit(unlist(comb_vars_list), "(?<!-)-(?!-)", perl = TRUE)
+
         comb_vars <- unlist(comb_vars_list)
+        # remove numbers
+        suppressWarnings( numeric_idx <- -which(!is.na(as.numeric(comb_vars))) )
+        if (length(numeric_idx) != 0) {
+          comb_vars <- comb_vars[-numeric_idx]
+        }
+
+
 
         # add backticks for evaluation of hypotheses
         comb_eval <- comb
@@ -181,9 +198,26 @@ lin_comb.bbcor <- function(lin_comb,
           # extract all correlations in hyp
           # 6-11-21: added .+ and )$ to account for names with underscores
           # comb_vars_list <- get_matches("^(.+[[:alnum:]]+--.+[[:alnum:]]+)$", comb)
-          comb_vars_list <- get_matches("\\(.+?--.+?\\)", comb)
-          comb_vars_list <- sapply(comb_vars_list, function(x) gsub("[()]", "", x))
+          # comb_vars_list <- get_matches("\\(.+?--.+?\\)", comb)
+          comb_vars_list <- get_matches("\\(.+?--.+?\\)", comb) # separates out variables
+
+          comb_vars_list <- gsub("[()]", "", comb_vars_list)
+
+          comb_vars_list <- strsplit(comb_vars_list, "[\\+<>\\/\\*]", perl = TRUE)
+
+
+          # GOLD:: look behind positive
+          # https://stackoverflow.com/questions/2973436/regex-lookahead-lookbehind-and-atomic-groups
+          comb_vars_list <- strsplit(unlist(comb_vars_list), "(?<!-)-(?!-)", perl = TRUE)
+
+
+
           comb_vars <- unlist(comb_vars_list)
+          # remove numbers
+          suppressWarnings( numeric_idx <- -which(!is.na(as.numeric(comb_vars))))
+          if (length(numeric_idx) != 0) {
+            comb_vars <- comb_vars[-numeric_idx]
+          }
 
           # add backticks for evaluation of hypotheses
           comb_eval <- comb
