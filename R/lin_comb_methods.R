@@ -152,9 +152,9 @@ lin_comb.bbcor <- function(lin_comb,
                            rope = NULL,
                            contrast = NULL) {
 
-  if(!requireNamespace("BBcor", quietly = TRUE)) {
-    stop("Please install the BBcor package.")
-  }
+  # if(!requireNamespace("BBcor", quietly = TRUE)) {
+  #   stop("Please install the BBcor package.")
+  # }
 
   all_vars <- extract_var_names(obj)
 
@@ -199,12 +199,10 @@ lin_comb.bbcor <- function(lin_comb,
           # 6-11-21: added .+ and )$ to account for names with underscores
           # comb_vars_list <- get_matches("^(.+[[:alnum:]]+--.+[[:alnum:]]+)$", comb)
           # comb_vars_list <- get_matches("\\(.+?--.+?\\)", comb)
-          comb_vars_list <- get_matches("\\(.+?--.+?\\)", comb) # separates out variables
-
+          comb_vars_list <- get_matches("\\(.+?--.+?\\)", comb)
           comb_vars_list <- gsub("[()]", "", comb_vars_list)
 
           comb_vars_list <- strsplit(comb_vars_list, "[\\+<>\\/\\*]", perl = TRUE)
-
 
           # GOLD:: look behind positive
           # https://stackoverflow.com/questions/2973436/regex-lookahead-lookbehind-and-atomic-groups

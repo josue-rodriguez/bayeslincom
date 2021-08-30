@@ -1,7 +1,7 @@
 Package: bayeslincom
 Type: Package
 Title: Linear Combinations of Bayesian Posterior Samples
-Version: 1.2.0
+Version: 1.3.0
 Authors@R: c(person("Josue E.", "Rodriguez", email = "josue.rodriguez594@gmail.com", role = c("aut", "cre")),
              person("Donald", "Williams", email = "drwwilliams@ucdavis.edu", role = "aut"))
 Description: Computes point estimates, standard deviations, and credible intervals 
@@ -16,9 +16,8 @@ Imports:
     ggplot2 (>= 3.3.2),
     methods,
     stats
-Suggests:
-    BBcor (>= 1.0.0),
-    BGGM (>= 2.0.2),
+Suggests:  
+    BGGM (>= 2.0.4),
     testthat
 RoxygenNote: 7.1.1
 BugReports: https://github.com/josue-rodriguez/bayeslincom/issues
