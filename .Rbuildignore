@@ -9,3 +9,4 @@
 ^CRAN-RELEASE$
 ^inst/figures/make_hex\.R$
 ^R/TESTING-REGEX\.R$
+^\.circleci$
