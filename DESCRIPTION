@@ -18,6 +18,6 @@ Imports:
     stats
 Suggests:  
     BGGM (>= 2.0.4),
-    testthat
+    testthat    
 RoxygenNote: 7.1.1
 BugReports: https://github.com/josue-rodriguez/bayeslincom/issues

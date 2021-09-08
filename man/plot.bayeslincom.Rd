@@ -41,9 +41,11 @@ An object of class \code{ggplot}
 Plot a linear combination of posterior samples
 }
 \examples{
-Y <- BGGM::ptsd
+
+if (require(BGGM)) library(BGGM)
+Y <- ptsd
 colnames(Y) <- letters[1:20]
-est <- BGGM::estimate(Y)
+est <- estimate(Y)
 bggm_comb <- lin_comb("a--c + a--d > b--c + b--d",
                       obj = est,
                       ci = 0.90,
